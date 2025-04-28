@@ -289,9 +289,9 @@ GLOBAL_VAR(restart_counter)
 	if(config)
 		var/server_name = CONFIG_GET(string/servername)
 		if (server_name)
-			s += "<a href=\"https://discord.gg/invite/hQHAK67Drd\"><b>[server_name] \[18+\] &#8212; Apply on Discord!</b></a>"
+			s += "<a href=\"https://discord.gg/invite/cq3gqaCTFG\"><b>[server_name] \[18+ World of Darkness\] &#8212; Apply on Discord!</b></a>"
 
-	s += "<br>Persistent 18+ immersive roleplay set in the World of Darkness, running modified WoD13 code. <br>Hosted by <b>Alanii, the Dark God.</b>"
+	s += "<br>Age Vetting Required. Accepting Bubber Vouches. Running modified WoD13.<br>Hosted by <b>MCI.</b>"
 
 	var/players = GLOB.clients.len
 
