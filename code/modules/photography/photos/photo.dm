@@ -22,7 +22,7 @@
 	if(!istype(P))
 		return
 	picture = P
-	update_icon()
+	update_appearance()
 	if(P.caption)
 		scribble = P.caption
 	if(setname && P.picture_name)
@@ -43,10 +43,11 @@
 
 /obj/item/photo/update_icon_state()
 	if(!istype(picture) || !picture.picture_image)
-		return
+		return ..()
 	var/icon/I = picture.get_small_icon(initial(icon_state))
 	if(I)
 		icon = I
+	return ..()
 
 /obj/item/photo/suicide_act(mob/living/carbon/user)
 	user.visible_message("<span class='suicide'>[user] is taking one last look at \the [src]! It looks like [user.p_theyre()] giving in to death!</span>")//when you wanna look at photo of waifu one last time before you die...
@@ -62,12 +63,12 @@
 /obj/item/photo/attackby(obj/item/P, mob/user, params)
 	if(burn_paper_product_attackby_check(P, user))
 		return
-	if(istype(P, /obj/item/pen) || istype(P, /obj/item/toy/crayon))
-		if(!user.is_literate())
-			to_chat(user, "<span class='notice'>You scribble illegibly on [src]!</span>")
+	if(IS_WRITING_UTENSIL(P))
+		if(!user.can_write(P))
 			return
-		var/txt = stripped_input(user, "What would you like to write on the back?", "Photo Writing", "", 128)
+		var/txt = tgui_input_text(user, "What would you like to write on the back?", "Photo Writing", max_length = 128)
 		if(txt && user.canUseTopic(src, BE_CLOSE))
+			playsound(src, SFX_WRITING_PEN, 50, TRUE, SHORT_RANGE_SOUND_EXTRARANGE, SOUND_FALLOFF_EXPONENT + 3, ignore_walls = FALSE)
 			scribble = txt
 	else
 		return ..()

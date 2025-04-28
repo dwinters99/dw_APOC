@@ -23,6 +23,7 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/addbunkerbypass,
 	/client/proc/revokebunkerbypass,
 	// TFN MODULAR END
+	/client/proc/requests
 	)
 GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
 GLOBAL_PROTECT(admin_verbs_admin)
@@ -64,7 +65,6 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/cmd_admin_check_contents,	/*displays the contents of an instance*/
 	/client/proc/centcom_podlauncher,/*Open a window to launch a Supplypod and configure it or it's contents*/
 	/client/proc/check_antagonists,		/*shows all antags*/
-	/datum/admins/proc/access_news_network,	/*allows access of newscasters*/
 	/client/proc/jumptocoord,			/*we ghost and jump to a coordinate*/
 	/client/proc/Getmob,				/*teleports a mob to our location*/
 	/client/proc/Getkey,				/*teleports a mob with a certain ckey to our location*/
@@ -93,7 +93,10 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/resetasaycolor,
 	/client/proc/toggleadminhelpsound,
 	/client/proc/respawn_character,
-	/datum/admins/proc/open_borgopanel
+	/datum/admins/proc/open_borgopanel,
+	/client/proc/log_viewer_new,
+	/client/proc/fax_panel, /*send a paper to fax*/
+	/client/proc/openTicketManager
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(/client/proc/unban_panel, /client/proc/ban_panel, /client/proc/stickybanpanel))
 GLOBAL_PROTECT(admin_verbs_ban)
@@ -207,7 +210,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	)
 GLOBAL_LIST_INIT(admin_verbs_possess, list(GLOBAL_PROC_REF(possess), GLOBAL_PROC_REF(release)))
 GLOBAL_PROTECT(admin_verbs_possess)
-GLOBAL_LIST_INIT(admin_verbs_permissions, list(/client/proc/edit_admin_permissions))
+GLOBAL_LIST_INIT(admin_verbs_permissions, list(/client/proc/edit_admin_permissions, /client/proc/edit_mentors))
 GLOBAL_PROTECT(admin_verbs_permissions)
 GLOBAL_LIST_INIT(admin_verbs_poll, list(/client/proc/poll_panel))
 GLOBAL_PROTECT(admin_verbs_poll)
@@ -231,7 +234,6 @@ GLOBAL_LIST_INIT(admin_verbs_hideable, list(
 //	/client/proc/cmd_admin_adjust_humanity,
 	/client/proc/cmd_admin_headset_message,
 	/client/proc/cmd_admin_check_contents,
-	/datum/admins/proc/access_news_network,
 	/client/proc/admin_call_shuttle,
 	/client/proc/admin_cancel_shuttle,
 	/client/proc/cmd_admin_direct_narrate,
@@ -570,10 +572,12 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 						to_chat(C, "<b>You've been rewarded with [amount] experience points. Reason: \"[reason]\"</b>")
 
 						C.prefs.add_experience(amount)
+						C.prefs.save_preferences()
 						C.prefs.save_character()
 
 						message_admins("[ADMIN_LOOKUPFLW(usr)] rewarded [ADMIN_LOOKUPFLW(exper)] with [amount] experience points. Reason: [reason]")
 						log_admin("[key_name(usr)] rewarded [key_name(exper)] with [amount] experience points. Reason: [reason]")
+						SSoverwatch.record_action(usr, "[key_name(usr)] rewarded [key_name(exper)] with [amount] experience points. Reason: [reason]")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Reward Experience") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/grant_whitelist()
@@ -593,7 +597,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		if (!length(whitelist_pool))
 			to_chat(usr, span_warning("[whitelistee] already has all whitelists!"))
 			return
-		var/whitelist = input("Whitelist to give:") as null|anything in sortList(whitelist_pool)
+		var/whitelist = input("Whitelist to give:") as null|anything in sort_list(whitelist_pool)
 		if (whitelist)
 			var/ticket_link = input("Link to whitelist request ticket:") as null|text
 			if (ticket_link)
@@ -636,6 +640,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 					message_admins("[ADMIN_LOOKUPFLW(usr)] gave [ADMIN_LOOKUPFLW(player)] the Discipline [discipline.name] at rank [discipline.level]. Reason: [reason]")
 					log_admin("[key_name(usr)] gave [key_name(player)] the Discipline [discipline.name] at rank [discipline.level]. Reason: [reason]")
+					SSoverwatch.record_action(usr, "[key_name(usr)] gave [key_name(player)] the Discipline [discipline.name] at rank [discipline.level]. Reason: [reason]")
 
 					if ((giving_discipline_level > 0) && player.mob)
 						if (ishuman(player.mob))
@@ -676,6 +681,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 				message_admins("[ADMIN_LOOKUPFLW(usr)] removed the Discipline [discipline.name] from [ADMIN_LOOKUPFLW(player)]. Reason: [reason]")
 				log_admin("[key_name(usr)] removed the Discipline [discipline.name] from [key_name(player)]. Reason: [reason]")
+				SSoverwatch.record_action(usr, "[key_name(usr)] removed the Discipline [discipline.name] from [key_name(player)]. Reason: [reason]")
 
 				qdel(discipline)
 
@@ -697,24 +703,38 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	holder.poll_list_panel()
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Server Poll Management") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/client/proc/findStealthKey(txt)
-	if(txt)
-		for(var/P in GLOB.stealthminID)
-			if(GLOB.stealthminID[P] == txt)
-				return P
-	txt = GLOB.stealthminID[ckey]
-	return txt
+/// Returns this client's stealthed ckey
+/client/proc/getStealthKey()
+	return GLOB.stealthminID[ckey]
+
+/// Takes a stealthed ckey as input, returns the true key it represents
+/proc/findTrueKey(stealth_key)
+	if(!stealth_key)
+		return
+	for(var/potentialKey in GLOB.stealthminID)
+		if(GLOB.stealthminID[potentialKey] == stealth_key)
+			return potentialKey
+
+/// Hands back a stealth ckey to use, guarenteed to be unique
+/proc/generateStealthCkey()
+	var/guess = rand(0, 1000)
+	var/text_guess
+	var/valid_found = FALSE
+	while(valid_found == FALSE)
+		valid_found = TRUE
+		text_guess = "@[num2text(guess)]"
+		// We take a guess at some number, and if it's not in the existing stealthmin list we exit
+		for(var/key in GLOB.stealthminID)
+			// If it is in the list tho, we up one number, and redo the loop
+			if(GLOB.stealthminID[key] == text_guess)
+				guess += 1
+				valid_found = FALSE
+				break
+
+	return text_guess
 
 /client/proc/createStealthKey()
-	var/num = (rand(0,1000))
-	var/i = 0
-	while(i == 0)
-		i = 1
-		for(var/P in GLOB.stealthminID)
-			if(num == GLOB.stealthminID[P])
-				num++
-				i = 0
-	GLOB.stealthminID["[ckey]"] = "@[num2text(num)]"
+	GLOB.stealthminID["[ckey]"] = generateStealthCkey()
 
 /client/proc/stealth()
 	set category = "Admin"
@@ -874,7 +894,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	if(!SStrading_card_game.loaded)
 		message_admins("The card subsystem is not currently loaded")
 		return
-	var/pack = input("Which pack should we test?", "You fucked it didn't you") as null|anything in sortList(SStrading_card_game.card_packs)
+	var/pack = input("Which pack should we test?", "You fucked it didn't you") as null|anything in sort_list(SStrading_card_game.card_packs)
 	var/batchCount = input("How many times should we open it?", "Don't worry, I understand") as null|num
 	var/batchSize = input("How many cards per batch?", "I hope you remember to check the validation") as null|num
 	var/guar = input("Should we use the pack's guaranteed rarity? If so, how many?", "We've all been there. Man you should have seen the old system") as null|num
@@ -894,7 +914,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	var/type_length = length_char("/obj/effect/proc_holder/spell") + 2
 	for(var/A in GLOB.spells)
 		spell_list[copytext_char("[A]", type_length)] = A
-	var/obj/effect/proc_holder/spell/S = input("Choose the spell to give to that guy", "ABRAKADABRA") as null|anything in sortList(spell_list)
+	var/obj/effect/proc_holder/spell/S = input("Choose the spell to give to that guy", "ABRAKADABRA") as null|anything in sort_list(spell_list)
 	if(!S)
 		return
 
@@ -915,7 +935,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	set desc = "Remove a spell from the selected mob."
 
 	if(T?.mind)
-		var/obj/effect/proc_holder/spell/S = input("Choose the spell to remove", "NO ABRAKADABRA") as null|anything in sortList(T.mind.spell_list)
+		var/obj/effect/proc_holder/spell/S = input("Choose the spell to remove", "NO ABRAKADABRA") as null|anything in sort_list(T.mind.spell_list)
 		if(S)
 			T.mind.RemoveSpell(S)
 			log_admin("[key_name(usr)] removed the spell [S] from [key_name(T)].")
@@ -929,7 +949,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	if(!istype(T))
 		to_chat(src, "<span class='notice'>You can only give a disease to a mob of type /mob/living.</span>", confidential = TRUE)
 		return
-	var/datum/disease/D = input("Choose the disease to give to that guy", "ACHOO") as null|anything in sortList(SSdisease.diseases, GLOBAL_PROC_REF(cmp_typepaths_asc))
+	var/datum/disease/D = input("Choose the disease to give to that guy", "ACHOO") as null|anything in sort_list(SSdisease.diseases, GLOBAL_PROC_REF(cmp_typepaths_asc))
 	if(!D)
 		return
 	T.ForceContractDisease(new D, FALSE, TRUE)

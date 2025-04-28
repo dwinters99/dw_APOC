@@ -5,10 +5,12 @@
 	desc = "The perfect showcase for your favorite deathtrap memories."
 	icon = 'icons/obj/decals.dmi'
 	custom_materials = list(/datum/material/wood = 2000)
+	resistance_flags = FLAMMABLE
 	flags_1 = 0
 	icon_state = "frame-overlay"
 	result_path = /obj/structure/sign/picture_frame
 	var/obj/item/photo/displayed
+	pixel_shift = 30
 
 /obj/item/wallframe/picture/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/photo))
@@ -16,7 +18,7 @@
 			if(!user.transferItemToLoc(I, src))
 				return
 			displayed = I
-			update_icon()
+			update_appearance()
 		else
 			to_chat(user, "<span class=notice>\The [src] already contains a photo.</span>")
 	..()
@@ -31,7 +33,7 @@
 		user.put_in_hands(I)
 		to_chat(user, "<span class='notice'>You carefully remove the photo from \the [src].</span>")
 		displayed = null
-		update_icon()
+		update_appearance()
 	return ..()
 
 /obj/item/wallframe/picture/attack_self(mob/user)
@@ -65,6 +67,7 @@
 	icon = 'icons/obj/decals.dmi'
 	icon_state = "frame-overlay"
 	custom_materials = list(/datum/material/wood = 2000)
+	resistance_flags = FLAMMABLE
 	var/obj/item/photo/framed
 	var/persistence_id
 	var/can_decon = TRUE
@@ -81,9 +84,6 @@
 	LAZYADD(SSpersistence.photo_frames, src)
 	if(dir)
 		setDir(dir)
-	if(building)
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -30 : 30)
-		pixel_y = (dir & 3)? (dir ==1 ? -30 : 30) : 0
 
 /obj/structure/sign/picture_frame/Destroy()
 	LAZYREMOVE(SSpersistence.photo_frames, src)
@@ -107,7 +107,7 @@
 		else
 			qdel(framed)
 		framed = P
-		update_icon()
+		update_appearance()
 
 /obj/structure/sign/picture_frame/examine(mob/user)
 	if(in_range(src, user) && framed)
@@ -136,7 +136,7 @@
 			if(!user.transferItemToLoc(P, src))
 				return
 			framed = P
-			update_icon()
+			update_appearance()
 		else
 			to_chat(user, "<span class=notice>\The [src] already contains a photo.</span>")
 
@@ -163,7 +163,7 @@
 		if(contents.len)
 			var/obj/item/I = pick(contents)
 			I.forceMove(F)
-		F.update_icon()
+		F.update_appearance()
 	qdel(src)
 
 

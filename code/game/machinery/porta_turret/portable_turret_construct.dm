@@ -157,14 +157,14 @@
 				build_step = PTURRET_CLOSED
 				return
 
-	if(istype(I, /obj/item/pen))	//you can rename turrets like bots!
-		var/t = stripped_input(user, "Enter new turret name", name, finish_name)
-		if(!t)
+	if(I.get_writing_implement_details()?["interaction_mode"] == MODE_WRITING) //you can rename turrets like bots!
+		var/choice = tgui_input_text(user, "Enter a new turret name", "Turret Classification", finish_name, MAX_NAME_LEN)
+		if(!choice)
 			return
 		if(!Adjacent(user))
 			return
 
-		finish_name = t
+		finish_name = choice
 		return
 	return ..()
 
@@ -194,3 +194,14 @@
 		qdel(installed_gun)
 		installed_gun = null
 	. = ..()
+
+
+#undef PTURRET_UNSECURED
+#undef PTURRET_BOLTED
+#undef PTURRET_START_INTERNAL_ARMOUR
+#undef PTURRET_INTERNAL_ARMOUR_ON
+#undef PTURRET_GUN_EQUIPPED
+#undef PTURRET_SENSORS_ON
+#undef PTURRET_CLOSED
+#undef PTURRET_START_EXTERNAL_ARMOUR
+#undef PTURRET_EXTERNAL_ARMOUR_ON

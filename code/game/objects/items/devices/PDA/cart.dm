@@ -1,19 +1,4 @@
 
-#define CART_SECURITY			(1<<0)
-#define CART_ENGINE				(1<<1)
-#define CART_ATMOS				(1<<2)
-#define CART_MEDICAL			(1<<3)
-#define CART_MANIFEST			(1<<4)
-#define CART_CLOWN				(1<<5)
-#define CART_MIME				(1<<6)
-#define CART_JANITOR			(1<<7)
-#define CART_REAGENT_SCANNER	(1<<8)
-#define CART_NEWSCASTER			(1<<9)
-#define CART_REMOTE_DOOR		(1<<10)
-#define CART_STATUS_DISPLAY		(1<<11)
-#define CART_QUARTERMASTER		(1<<12)
-#define CART_HYDROPONICS		(1<<13)
-#define CART_DRONEPHONE			(1<<14)
 
 
 /obj/item/cartridge
@@ -315,7 +300,7 @@ Code:
 		if (44) //medical records //This thing only displays a single screen so it's hard to really get the sub-menu stuff working.
 			menu = "<h4>[PDAIMG(medical)] Medical Record List</h4>"
 			if(GLOB.data_core.general)
-				for(var/datum/data/record/R in sortRecord(GLOB.data_core.general))
+				for(var/datum/data/record/R in sort_record(GLOB.data_core.general))
 					menu += "<a href='byond://?src=[REF(src)];choice=Medical Records;target=[R.fields["id"]]'>[R.fields["id"]]: [R.fields["name"]]<br>"
 			menu += "<br>"
 		if(441)
@@ -358,7 +343,7 @@ Code:
 		if (45) //security records
 			menu = "<h4>[PDAIMG(cuffs)] Security Record List</h4>"
 			if(GLOB.data_core.general)
-				for (var/datum/data/record/R in sortRecord(GLOB.data_core.general))
+				for (var/datum/data/record/R in sort_record(GLOB.data_core.general))
 					menu += "<a href='byond://?src=[REF(src)];choice=Security Records;target=[R.fields["id"]]'>[R.fields["id"]]: [R.fields["name"]]<br>"
 
 			menu += "<br>"
@@ -515,29 +500,6 @@ Code:
 			else
 				menu += "ERROR: Unable to determine current location."
 			menu += "<br><br><A href='byond://?src=[REF(src)];choice=49'>Refresh GPS Locator</a>"
-
-		if (53) // Newscaster
-			menu = "<h4>[PDAIMG(notes)] Newscaster Access</h4>"
-			menu += "<br> Current Newsfeed: <A href='byond://?src=[REF(src)];choice=Newscaster Switch Channel'>[current_channel ? current_channel : "None"]</a> <br>"
-			var/datum/newscaster/feed_channel/current
-			for(var/datum/newscaster/feed_channel/chan in GLOB.news_network.network_channels)
-				if (chan.channel_name == current_channel)
-					current = chan
-			if(!current)
-				menu += "<h5> ERROR : NO CHANNEL FOUND </h5>"
-				return menu
-			var/i = 1
-			for(var/datum/newscaster/feed_message/msg in current.messages)
-				menu +="-[msg.returnBody(-1)] <BR><FONT SIZE=1>\[Story by <FONT COLOR='maroon'>[msg.returnAuthor(-1)]</FONT>\]</FONT><BR>"
-				menu +="<b><font size=1>[msg.comments.len] comment[msg.comments.len > 1 ? "s" : ""]</font></b><br>"
-				if(msg.img)
-					user << browse_rsc(msg.img, "tmp_photo[i].png")
-					menu +="<img src='tmp_photo[i].png' width = '180'><BR>"
-				i++
-				for(var/datum/newscaster/feed_comment/comment in msg.comments)
-					menu +="<font size=1><small>[comment.body]</font><br><font size=1><small><small><small>[comment.author] [comment.time_stamp]</small></small></small></small></font><br>"
-			menu += "<br> <A href='byond://?src=[REF(src)];choice=Newscaster Message'>Post Message</a>"
-
 		if (54) // Beepsky, Medibot, Floorbot, and Cleanbot access
 			menu = "<h4>[PDAIMG(medbot)] Bots Interlink</h4>"
 			bot_control()
@@ -548,7 +510,7 @@ Code:
 			if(!emoji_table)
 				var/datum/asset/spritesheet/sheet = get_asset_datum(/datum/asset/spritesheet/chat)
 				var/list/collate = list("<br><table>")
-				for(var/emoji in sortList(icon_states(icon('icons/emoji.dmi'))))
+				for(var/emoji in sort_list(icon_states(icon('icons/emoji.dmi'))))
 					var/tag = sheet.icon_tag("emoji-[emoji]")
 					collate += "<tr><td>[emoji]</td><td>[tag]</td></tr>"
 				collate += "</table><br>"
@@ -621,29 +583,6 @@ Code:
 
 		if("Supply Orders")
 			host_pda.mode =47
-
-		if("Newscaster Access")
-			host_pda.mode = 53
-
-		if("Newscaster Message")
-			var/host_pda_owner_name = host_pda.id ? "[host_pda.id.registered_name] ([host_pda.id.assignment])" : "Unknown"
-			var/message = host_pda.msg_input()
-			var/datum/newscaster/feed_channel/current
-			for(var/datum/newscaster/feed_channel/chan in GLOB.news_network.network_channels)
-				if (chan.channel_name == current_channel)
-					current = chan
-			if(current.locked && current.author != host_pda_owner_name)
-				host_pda.mode = 99
-				host_pda.Topic(null,list("choice"="Refresh"))
-				return
-			GLOB.news_network.SubmitArticle(message,host_pda.owner,current_channel)
-			host_pda.Topic(null,list("choice"=num2text(host_pda.mode)))
-			return
-
-		if("Newscaster Switch Channel")
-			current_channel = host_pda.msg_input()
-			host_pda.Topic(null,list("choice"=num2text(host_pda.mode)))
-			return
 
 	//emoji previews
 	if(href_list["emoji"])

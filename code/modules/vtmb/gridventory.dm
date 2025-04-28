@@ -609,7 +609,7 @@ VENTORY!
 			final_y = coordinate_y+current_y
 			calculated_coordinates = "[final_x],[final_y]"
 			testing("handle_item_insertion SUCCESS calculated_coordinates: ([calculated_coordinates])")
-			LAZYADDASSOC(grid_coordinates_to_item, calculated_coordinates, storing)
+			LAZYADDASSOCLIST(grid_coordinates_to_item, calculated_coordinates, storing)
 			LAZYINITLIST(item_to_grid_coordinates)
 			LAZYINITLIST(item_to_grid_coordinates[storing])
 			LAZYADD(item_to_grid_coordinates[storing], calculated_coordinates)
@@ -725,7 +725,7 @@ VENTORY!
 		else
 			coordinates = screen_loc_to_grid_coordinates(coordinates)
 		grid_add_item(storing, coordinates)
-	update_icon()
+	update_appearance()
 	refresh_mob_views()
 	return TRUE
 
@@ -757,7 +757,7 @@ VENTORY!
 	else
 		//Being destroyed, just move to nullspace now (so it's not in contents for the icon update)
 		removed.moveToNullspace()
-	update_icon()
+	update_appearance()
 	refresh_mob_views()
 	return TRUE
 
@@ -877,8 +877,8 @@ VENTORY!
 	grid_height = 1 GRID_BOXES
 
 /obj/item/melee/vampirearms/machete
-    grid_width = 3 GRID_BOXES
-    grid_height = 1 GRID_BOXES
+	grid_width = 3 GRID_BOXES
+	grid_height = 1 GRID_BOXES
 
 /obj/item/melee/vampirearms/rapier
 	grid_width = 2 GRID_BOXES

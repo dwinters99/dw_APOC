@@ -30,16 +30,19 @@
 			playsound(src,'sound/machines/synth_no.ogg',50,FALSE)
 		if (SP_UNREADY)
 			ready = FALSE
-	update_icon()
+	update_appearance()
 
 /obj/item/supplypod_beacon/update_overlays()
 	. = ..()
-	if (launched)
+	if(launched)
 		. += "sp_green"
-	else if (ready)
+		return
+	if(ready)
 		. += "sp_yellow"
-	else if (linked)
+		return
+	if(linked)
 		. += "sp_orange"
+		return
 
 /obj/item/supplypod_beacon/proc/endLaunch()
 	launched = FALSE
@@ -97,12 +100,12 @@
 //		to_chat(user, "<span class='alert'>There is no linked console.</span>")
 
 /obj/item/supplypod_beacon/attackby(obj/item/W, mob/user)
-	if(istype(W, /obj/item/pen)) //give a tag that is visible from the linked express console
-		var/new_beacon_name = stripped_input(user, "What would you like the tag to be?")
-		if(!user.canUseTopic(src, BE_CLOSE))
-			return
-		if(new_beacon_name)
-			name += " ([tag])"
+	if(IS_WRITING_UTENSIL(W)) //give a tag that is visible from the linked express console
+		return ..()
+	var/new_beacon_name = tgui_input_text(user, "What would you like the tag to be?", "Beacon Tag", max_length = MAX_NAME_LEN)
+	if(isnull(new_beacon_name))
+		return
+	if(!user.canUseTopic(src))
 		return
 	else
 		return ..()

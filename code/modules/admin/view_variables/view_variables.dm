@@ -42,6 +42,8 @@
 		sprite_text = no_icon? "\[NO ICON\]" : "<img src='vv[hash].png'></td><td>"
 	var/list/header = islist(D)? list("<b>/list</b>") : D.vv_get_header()
 
+	var/ref_line = "@[copytext(refid, 2, -1)]" // get rid of the brackets, add a @ prefix for copy pasting in asay
+
 	var/marked_line
 	if(holder && holder.marked_datum && holder.marked_datum == D)
 		marked_line = VV_MSG_MARKED
@@ -88,7 +90,7 @@
 				value = L[key]
 			variable_html += debug_variable(i, value, 0, L)
 	else
-		names = sortList(names)
+		names = sort_list(names)
 		for(var/V in names)
 			if(D.can_vv_get(V))
 				variable_html += D.vv_get_var(V)
@@ -213,6 +215,7 @@
 						</table>
 						<div align='center'>
 							<b><font size='1'>[formatted_type]</font></b>
+							<br><b><font size='1'>[ref_line]</font></b>
 							<span id='marked'>[marked_line]</span>
 							<span id='varedited'>[varedited_line]</span>
 							<span id='deleted'>[deleted_line]</span>
@@ -220,7 +223,7 @@
 					</td>
 					<td width='50%'>
 						<div align='center'>
-							<a id='refresh_link' href='?_src_=vars;
+							<a id='refresh_link' href='byond://?_src_=vars;
 datumrefresh=[refid];[HrefToken()]'>Refresh</a>
 							<form>
 								<select name="file" size="1"

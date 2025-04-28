@@ -51,6 +51,7 @@ GLOBAL_LIST_EMPTY(gravity_generators) // We will keep track of this by adding ne
 		qdel(src)//like the singulo, tesla deletes it. stops it from exploding over and over
 
 /obj/machinery/gravity_generator/update_icon_state()
+	. = ..()
 	icon_state = "[get_status()]_[sprite_number]"
 
 /obj/machinery/gravity_generator/proc/get_status()
@@ -402,7 +403,7 @@ GLOBAL_LIST_EMPTY(gravity_generators) // We will keep track of this by adding ne
 
 /obj/item/paper/guides/jobs/engi/gravity_gen
 	name = "paper- 'Generate your own gravity!'"
-	info = {"<h1>Gravity Generator Instructions For Dummies</h1>
+	default_raw_text = {"<h1>Gravity Generator Instructions For Dummies</h1>
 	<p>Surprisingly, gravity isn't that hard to make! All you have to do is inject deadly radioactive minerals into a ball of
 	energy and you have yourself gravity! You can turn the machine on or off when required but you must remember that the generator
 	will EMIT RADIATION when charging or discharging, you can tell it is charging or discharging by the noise it makes, so please WEAR PROTECTIVE CLOTHING.</p>

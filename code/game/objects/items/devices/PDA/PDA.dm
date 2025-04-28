@@ -1047,10 +1047,10 @@ GLOBAL_LIST_EMPTY(PDAs)
 
 	if (!scanmode && istype(A, /obj/item/paper) && owner)
 		var/obj/item/paper/PP = A
-		if (!PP.info)
+		if (!PP.default_raw_text)
 			to_chat(user, "<span class='warning'>Unable to scan! Paper is blank.</span>")
 			return
-		notehtml = PP.info
+		notehtml = PP.default_raw_text
 		note = replacetext(notehtml, "<BR>", "\[br\]")
 		note = replacetext(note, "<li>", "\[*\]")
 		note = replacetext(note, "<ul>", "\[list\]")
@@ -1134,7 +1134,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 
 		plist[avoid_assoc_duplicate_keys(P.owner, namecounts)] = P
 
-	var/c = input(user, "Please select a PDA") as null|anything in sortList(plist)
+	var/c = input(user, "Please select a PDA") as null|anything in sort_list(plist)
 
 	if (!c)
 		return
@@ -1183,7 +1183,7 @@ GLOBAL_LIST_EMPTY(PDAs)
 	else
 		sortmode = GLOBAL_PROC_REF(cmp_pdaname_asc)
 
-	for(var/obj/item/pda/P in sortList(GLOB.PDAs, sortmode))
+	for(var/obj/item/pda/P in sort_list(GLOB.PDAs, sortmode))
 		if(!P.owner || P.toff || P.hidden)
 			continue
 		. += P
@@ -1198,3 +1198,12 @@ GLOBAL_LIST_EMPTY(PDAs)
 #undef PDA_SCANNER_HALOGEN
 #undef PDA_SCANNER_GAS
 #undef PDA_SPAM_DELAY
+
+#undef FONT_MONO
+#undef FONT_SHARE
+#undef FONT_ORBITRON
+#undef FONT_VT
+#undef MODE_MONO
+#undef MODE_SHARE
+#undef MODE_ORBITRON
+#undef MODE_VT

@@ -39,6 +39,7 @@
 
 /obj/structure/windoor_assembly/update_icon_state()
 	icon_state = "[facing]_[secure ? "secure_" : ""]windoor_assembly[state]"
+	return ..()
 
 /obj/structure/windoor_assembly/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
@@ -213,8 +214,8 @@
 					electronics = null
 					ae.forceMove(drop_location())
 
-			else if(istype(W, /obj/item/pen))
-				var/t = stripped_input(user, "Enter the name for the door.", name, created_name,MAX_NAME_LEN)
+			else if(IS_WRITING_UTENSIL(W))
+				var/t = tgui_input_text(user, "Enter the name for the door", "Windoor Renaming", created_name, MAX_NAME_LEN)
 				if(!t)
 					return
 				if(!in_range(src, usr) && loc != usr)
@@ -288,7 +289,7 @@
 				return ..()
 
 	//Update to reflect changes(if applicable)
-	update_icon()
+	update_appearance()
 
 
 
@@ -309,7 +310,7 @@
 	return TRUE
 
 /obj/structure/windoor_assembly/proc/after_rotation(mob/user)
-	update_icon()
+	update_appearance()
 
 //Flips the windoor assembly, determines whather the door opens to the left or the right
 /obj/structure/windoor_assembly/verb/flip()
@@ -331,5 +332,5 @@
 		facing = "l"
 		to_chat(usr, "<span class='notice'>The windoor will now slide to the left.</span>")
 
-	update_icon()
+	update_appearance()
 	return

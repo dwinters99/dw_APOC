@@ -269,15 +269,6 @@
 	contains = list(/obj/item/gun/ballistic/shotgun/toy/crossbow/vampire)
 	crate_name = "weapon crate"
 
-/datum/supply_pack/vampire/weapondeagle50
-	name = "Weapon (desert eagle 50AE)"
-	desc = "Contains a .50 caliber desert eagle."
-	cost = 5000
-	contains = list(
-		/obj/item/gun/ballistic/automatic/vampire/deagle/c50,
-		/obj/item/ammo_box/magazine/m50,
-	)
-
 /datum/supply_pack/vampire/weaponsniper
 	name = "Weapon (sniper rifle)"
 	desc = "Contains a sniper rifle."
@@ -452,13 +443,6 @@
 	contains = list(/obj/item/ammo_box/magazine/vampthompson = 3)
 	crate_name = "ammo crate"
 
-/datum/supply_pack/vampire/magazine_deagle50
-	name = "Ammo (3x Desert Eagle 50AE magazines)"
-	desc = "Contains three desert eagle 50AE magazines."
-	cost = 1200
-	contains = list(/obj/item/ammo_box/magazine/m50 = 3)
-	crate_name = "ammo crate"
-
 /datum/supply_pack/vampire/holster
 	name = "Armor (holster)"
 	desc = "Contans one pistol holster."
@@ -531,9 +515,10 @@
 
 /obj/item/stack/dollar/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
 	. = ..()
-	update_icon()
+	update_appearance()
 
 /obj/item/stack/dollar/update_icon_state()
+	. = ..()
 	var/amount = get_amount()
 	switch(amount)
 		if(100 to INFINITY)
@@ -564,7 +549,7 @@
 	. = ..()
 	if(amount == 1.3)
 		amount = rand(5, 30)
-		update_icon()
+		update_appearance()
 
 /obj/item/cargo_box
 	name = "cargo box"

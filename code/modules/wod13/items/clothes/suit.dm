@@ -196,6 +196,11 @@
 	desc = "A red hood with an ornate golden trim, marked with the emblem of House Tremere."
 	icon_state = "magister_hood"
 
+/obj/item/clothing/suit/vampire/nun
+	name = "Sisterly Frock"
+	desc = "The habit of a religious sister of the catholic church."
+	icon_state = "nun"
+
 /obj/item/clothing/suit/vampire/coat
 	name = "brown coat"
 	desc = "A warm and heavy brown coat."
@@ -242,6 +247,10 @@
 	icon_state = "jacket2"
 	armor = list(MELEE = 35, BULLET = 35, LASER = 10, ENERGY = 10, BOMB = 35, BIO = 0, RAD = 0, FIRE = 35, ACID = 10, WOUND = 35)
 
+/obj/item/clothing/suit/vampire/jacket/better/armored
+	name = "armored leather jacket"
+	armor = list(MELEE = 45, BULLET = 45, LASER = 10, ENERGY = 10, BOMB = 35, BIO = 0, RAD = 0, FIRE = 45, ACID = 10,WOUND = 35);
+
 /obj/item/clothing/suit/vampire/trench
 	name = "trenchcoat"
 	desc = "Best noir clothes for night. Provides some kind of protection."
@@ -251,6 +260,12 @@
 /obj/item/clothing/suit/vampire/trench/alt
 	name = "brown trenchcoat"
 	icon_state = "trench2"
+
+/obj/item/clothing/suit/vampire/trench/alt/armored
+	name = "armored trenchcoat"
+	icon_state = "trench2"
+	armor = list("melee"=50,"bullet"=50,"laser"=50,"energy"=10,"bomb"=40,"bio"=0,"rad"=0,"fire"=40,"acid"=10,"wound"=25);
+	max_integrity = 1000;
 
 /obj/item/clothing/suit/vampire/trench/archive
 	name = "rich trenchcoat"

@@ -39,8 +39,8 @@ SUBSYSTEM_DEF(communications)
 			if(print)
 				var/obj/item/paper/P = new /obj/item/paper(C.loc)
 				P.name = "paper - '[sending.title]'"
-				P.info = sending.content
-				P.update_icon()
+				P.add_raw_text(sending.content)
+				P.update_appearance()
 
 #undef COMMUNICATION_COOLDOWN
 #undef COMMUNICATION_COOLDOWN_AI

@@ -15,10 +15,8 @@
 
 
 /obj/item/implanter/update_icon_state()
-	if(imp)
-		icon_state = "implanter1"
-	else
-		icon_state = "implanter0"
+	icon_state = "implanter[imp ? 1 : 0]"
+	return ..()
 
 
 /obj/item/implanter/attack(mob/living/M, mob/user)
@@ -37,7 +35,7 @@
 					else
 						M.visible_message("<span class='notice'>[user] implants [M].</span>", "<span class='notice'>[user] implants you.</span>")
 					imp = null
-					update_icon()
+					update_appearance()
 				else
 					to_chat(user, "<span class='warning'>[src] fails to implant [M].</span>")
 
@@ -56,10 +54,14 @@
 		else
 			name = "implanter"
 	else
+		to_chat(user, span_warning("[user] fails to implant [src]."))
+
+/obj/item/implanter/attackby(obj/item/I, mob/living/user, params)
+	if(IS_WRITING_UTENSIL(I))
 		return ..()
 
 /obj/item/implanter/Initialize(mapload)
 	. = ..()
 	if(imp_type)
 		imp = new imp_type(src)
-	update_icon()
+	update_appearance()

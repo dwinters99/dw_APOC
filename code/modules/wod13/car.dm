@@ -331,7 +331,7 @@ SUBSYSTEM_DEF(carpool)
 		for(var/mob/living/rider in src)
 			. += "<span class='notice'>* [rider]</span>"
 
-/obj/vampire_car/proc/get_damage(var/cost)
+/obj/vampire_car/proc/get_damage(cost)
 	if(cost > 0)
 		health = max(0, health-cost)
 	if(cost < 0)
@@ -686,6 +686,15 @@ SUBSYSTEM_DEF(carpool)
 	var/color_blue = FALSE
 	var/last_color_change = 0
 
+/obj/vampire_car/police/unmarked
+	icon_state = "unmarked"
+	max_passengers = 3
+	dir = WEST
+	beep_sound = 'code/modules/wod13/sounds/migalka.ogg'
+	access = "police"
+	baggage_limit = 45
+	baggage_max = WEIGHT_CLASS_BULKY
+
 /obj/vampire_car/police/handle_caring()
 	if(fari_on)
 		if(last_color_change+10 <= world.time)
@@ -735,7 +744,7 @@ SUBSYSTEM_DEF(carpool)
 	access = "clinic"
 	baggage_limit = 60
 
-/proc/get_dist_in_pixels(var/pixel_starts_x, var/pixel_starts_y, var/pixel_ends_x, var/pixel_ends_y)
+/proc/get_dist_in_pixels(pixel_starts_x, pixel_starts_y, pixel_ends_x, pixel_ends_y)
 	var/total_x = abs(pixel_starts_x-pixel_ends_x)
 	var/total_y = abs(pixel_starts_y-pixel_ends_y)
 	return round(sqrt(total_x*total_x + total_y*total_y))
@@ -751,7 +760,7 @@ SUBSYSTEM_DEF(carpool)
 	else if(dx < 0)
 		. += 360
 
-/proc/get_angle_diff(var/angle_a, var/angle_b)
+/proc/get_angle_diff(angle_a, angle_b)
 	return ((angle_b - angle_a) + 180) % 360 - 180;
 
 /obj/vampire_car
@@ -983,7 +992,7 @@ SUBSYSTEM_DEF(carpool)
 		if(WEST)
 			controlling(0, -turn_speed)
 
-/obj/vampire_car/proc/controlling(var/adjusting_speed, var/adjusting_turn)
+/obj/vampire_car/proc/controlling(adjusting_speed, adjusting_turn)
 	var/drift = 1
 	if(driver)
 		if(HAS_TRAIT(driver, TRAIT_EXP_DRIVER))

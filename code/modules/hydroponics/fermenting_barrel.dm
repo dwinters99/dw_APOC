@@ -3,6 +3,7 @@
 	desc = "A large wooden barrel. You can ferment fruits and such inside it, or just use it to hold liquid."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "barrel"
+	resistance_flags = FLAMMABLE
 	density = TRUE
 	anchored = FALSE
 	max_integrity = 300
@@ -65,13 +66,11 @@
 		reagents.flags |= DRAINABLE
 		reagents.flags &= ~(REFILLABLE | TRANSPARENT)
 		to_chat(user, "<span class='notice'>You close [src], letting you draw from its tap.</span>")
-	update_icon()
+	update_appearance()
 
 /obj/structure/fermenting_barrel/update_icon_state()
-	if(open)
-		icon_state = "barrel_open"
-	else
-		icon_state = "barrel"
+	icon_state = open ? "barrel_open" : "barrel"
+	return ..()
 
 /datum/crafting_recipe/fermenting_barrel
 	name = "Wooden Barrel"

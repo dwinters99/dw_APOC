@@ -404,7 +404,7 @@
 	name = "Dissection Guide"
 	icon_state = "alienpaper_words"
 	show_written_words = FALSE
-	info = {"<b>Dissection for Dummies</b><br>
+	default_raw_text = {"<b>Dissection for Dummies</b><br>
 
 <br>
 1.Acquire fresh specimen.<br>
@@ -487,9 +487,10 @@ Congratulations! You are now trained for invasive xenobiology research!"}
 	if(!turned_on)
 		toggle_on(user)
 	to_chat(usr, "<span class='notice'>You switch the baton to [txt] mode.</span>")
-	update_icon()
+	update_appearance()
 
 /obj/item/melee/baton/abductor/update_icon_state()
+	. = ..()
 	switch(mode)
 		if(BATON_STUN)
 			icon_state = "wonderprodStun"

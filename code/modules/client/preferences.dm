@@ -161,8 +161,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/is_enlightened = FALSE
 
 	//Legacy
-	var/exper = 1440
-	var/exper_plus = 0
 
 	var/discipline1level = 1
 	var/discipline2level = 1
@@ -174,8 +172,13 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/discipline3type
 	var/discipline4type
 
+	//New experience counter, global for all characters per client.
+	var/player_experience = 50
+	//Amount of EXP used on the current character, this is returned when a character is reset.
+	var/experience_used_on_character = 0
+
 	//Character sheet stats
-	var/true_experience = 50
+	var/true_experience = 0
 	var/torpor_count = 0
 
 	//linked lists determining known Disciplines and their known ranks
@@ -201,7 +204,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/lover = FALSE
 
 	var/flavor_text
+	var/flavor_text_nsfw
 	var/ooc_notes
+	var/character_notes
 
 	var/friend_text
 	var/enemy_text
@@ -238,8 +243,13 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/list/chi_types = list()
 	var/list/chi_levels = list()
 
+	// Off by default. Opt-in.
+	var/nsfw_content_pref = FALSE
+
+	var/derangement = TRUE
+
 /datum/preferences/proc/add_experience(amount)
-	true_experience = clamp(true_experience + amount, 0, 1000)
+	player_experience = clamp(player_experience + amount, 0, 100000)
 
 /datum/preferences/proc/reset_character()
 	slotlocked = 0
@@ -286,7 +296,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	random_species()
 	random_character()
 	body_model = rand(1, 3)
-	true_experience = 50
+	experience_used_on_character = 0
 	real_name = random_unique_name(gender)
 	headshot_link = null // TFN EDIT
 	save_character()
@@ -422,39 +432,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "</tr></table>"
 
 			dat += "<h2>[make_font_cool("BODY")]</h2>"
-			/*
-			dat += "<BR>"
-			var/max_death = 6
-			if(pref_species.name == "Vampire")
-				switch(generation)
-					if(13)
-						max_death = 6
-					if(12)
-						max_death = 6
-					if(11)
-						max_death = 5
-					if(10)
-						max_death = 4
-					if(9)
-						max_death = 3
-					if(8)
-						max_death = 2
-					if(7)
-						max_death = 2
-					if(6)
-						max_death = 1
-					if(5)
-						max_death = 1
-					if(4)
-						max_death = 1
-					if(3)
-						max_death = 1
-
-			dat += "<b>[pref_species.name == "Vampire" ? "Torpor" : "Clinical Death"] Count:</b> [torpor_count]/[max_death]"
-			if(true_experience >= 3*(14-generation) && torpor_count > 0)
-				dat += " <a href='byond://?_src_=prefs;preference=torpor_restore;task=input'>Restore ([5*(14-generation)])</a><BR>"
-			dat += "<BR>"
-			*/
 			dat += "<a href='byond://?_src_=prefs;preference=all;task=random'>Random Body</A> "
 
 			dat += "<table width='100%'><tr><td width='24%' valign='top'>"
@@ -471,14 +448,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						if(SSwhitelists.is_whitelisted(user.ckey, TRUSTED_PLAYER))
 							if(generation_bonus)
 								dat += " (+[generation_bonus]/[min(MAX_TRUSTED_GENERATION-1, generation-MAX_TRUSTED_GENERATION)])"
-							if(true_experience >= 20 && generation_bonus < max(0, generation-MAX_TRUSTED_GENERATION))
+							if(player_experience >= 20 && generation_bonus < max(0, generation-MAX_TRUSTED_GENERATION))
 								dat += " <a href='byond://?_src_=prefs;preference=generation;task=input'>Claim generation bonus (20)</a><BR>"
 							else
 								dat += "<BR>"
 						else
 							if(generation_bonus)
 								dat += " (+[generation_bonus]/[min(MAX_PUBLIC_GENERATION-1, generation-MAX_PUBLIC_GENERATION)])"
-							if(true_experience >= 20 && generation_bonus < max(0, generation-MAX_PUBLIC_GENERATION))
+							if(player_experience >= 20 && generation_bonus < max(0, generation-MAX_PUBLIC_GENERATION))
 								dat += " <a href='byond://?_src_=prefs;preference=generation;task=input'>Claim generation bonus (20)</a><BR>"
 							else
 								dat += "<BR>"
@@ -488,7 +465,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					var/datum/dharma/D = new dharma_type()
 					dat += "<b>Dharma:</b> [D.name] [dharma_level]/6 <a href='byond://?_src_=prefs;preference=dharmatype;task=input'>Switch</a><BR>"
 					dat += "[D.desc]<BR>"
-					if(true_experience >= min((dharma_level * 5), 20) && (dharma_level < 6))
+					if(player_experience >= min((dharma_level * 5), 20) && (dharma_level < 6))
 						var/dharma_cost = min((dharma_level * 5), 20)
 						dat += " <a href='byond://?_src_=prefs;preference=dharmarise;task=input'>Raise Dharmic Enlightenment ([dharma_cost])</a><BR>"
 					dat += "<b>P'o Personality</b>: [po_type] <a href='byond://?_src_=prefs;preference=potype;task=input'>Switch</a><BR>"
@@ -523,7 +500,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<b>Cruelty:</b> [build_attribute_score(blood, A.archetype_additional_blood, blood_price, "blood")]"
 			dat += "<b>Lockpicking:</b> [build_attribute_score(lockpicking, A.archetype_additional_lockpicking, lockpicking_price, "lockpicking")]"
 			dat += "<b>Athletics:</b> [build_attribute_score(athletics, A.archetype_additional_athletics, athletics_price, "athletics")]"
-			dat += "Experience rewarded: [true_experience]<BR>"
+			dat += "Experience rewarded: [player_experience]<BR>"
 			if(pref_species.name == "Werewolf")
 				dat += "<h2>[make_font_cool("TRIBE")]</h2>"
 				dat += "<br><b>Werewolf Name:</b> "
@@ -531,7 +508,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				dat += "<b>Auspice:</b> <a href='byond://?_src_=prefs;preference=auspice;task=input'>[auspice.name]</a><BR>"
 				dat += "Description: [auspice.desc]<BR>"
 				dat += "<b>Power:</b> •[auspice_level > 1 ? "•" : "o"][auspice_level > 2 ? "•" : "o"]([auspice_level])"
-				if(true_experience >= 10*auspice_level && auspice_level != 3)
+				if(player_experience >= 10*auspice_level && auspice_level != 3)
 					dat += "<a href='byond://?_src_=prefs;preference=auspice_level;task=input'>Increase ([10*auspice_level])</a>"
 				dat += "<b>Initial Rage:</b> •[auspice.start_rage > 1 ? "•" : "o"][auspice.start_rage > 2 ? "•" : "o"][auspice.start_rage > 3 ? "•" : "o"][auspice.start_rage > 4 ? "•" : "o"]([auspice.start_rage])<BR>"
 				var/gifts_text = ""
@@ -605,6 +582,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if(pref_species.name == "Vampire")
 				dat += "<h2>[make_font_cool("CLANE")]</h2>"
 				dat += "<b>Clane/Bloodline:</b> <a href='byond://?_src_=prefs;preference=clane;task=input'>[clane.name]</a><BR>"
+				if(clane.name == CLAN_MALKAVIAN)
+					dat+="<b>Degree of Derangement:</b> <a href ='byond://?_src_=prefs;preference=derangement;task=input'>[derangement == TRUE ? "Insanity" : "Madness"]</a><BR>"
 				dat += "<b>Description:</b> [clane.desc]<BR>"
 				dat += "<b>Curse:</b> [clane.curse]<BR>"
 				if(length(clane.accessories))
@@ -636,7 +615,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						cost = discipline_level * 7
 
 					dat += "<b>[discipline.name]</b>: [discipline_level > 0 ? "•" : "o"][discipline_level > 1 ? "•" : "o"][discipline_level > 2 ? "•" : "o"][discipline_level > 3 ? "•" : "o"][discipline_level > 4 ? "•" : "o"]([discipline_level])"
-					if((true_experience >= cost) && (discipline_level != 5))
+					if((player_experience >= cost) && (discipline_level != 5))
 						dat += "<a href='byond://?_src_=prefs;preference=discipline;task=input;upgradediscipline=[i]'>Learn ([cost])</a><BR>"
 					else
 						dat += "<BR>"
@@ -650,7 +629,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						if (discipline.clan_restricted)
 							possible_new_disciplines -= discipline_type
 						qdel(discipline)
-					if (possible_new_disciplines.len && (true_experience >= 10))
+					if (possible_new_disciplines.len && (player_experience >= 10))
 						dat += "<a href='byond://?_src_=prefs;preference=newdiscipline;task=input'>Learn a new Discipline (10)</a><BR>"
 
 			if(pref_species.name == "Ghoul")
@@ -662,7 +641,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					qdel(discipline)
 
 				var/list/possible_new_disciplines = subtypesof(/datum/discipline) - discipline_types - /datum/discipline/bloodheal
-				if (possible_new_disciplines.len && (true_experience >= 10))
+				if (possible_new_disciplines.len && (player_experience >= 10))
 					dat += "<a href='byond://?_src_=prefs;preference=newghouldiscipline;task=input'>Learn a new Discipline (10)</a><BR>"
 
 			if (pref_species.name == "Kuei-Jin")
@@ -679,7 +658,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						cost = discipline_level * 6
 
 					dat += "<b>[discipline.name]</b> ([discipline.discipline_type]): [discipline_level > 0 ? "•" : "o"][discipline_level > 1 ? "•" : "o"][discipline_level > 2 ? "•" : "o"][discipline_level > 3 ? "•" : "o"][discipline_level > 4 ? "•" : "o"]([discipline_level])"
-					if((true_experience >= cost) && (discipline_level != 5))
+					if((player_experience >= cost) && (discipline_level != 5))
 						dat += "<a href='byond://?_src_=prefs;preference=discipline;task=input;upgradechidiscipline=[i]'>Learn ([cost])</a><BR>"
 					else
 						dat += "<BR>"
@@ -710,34 +689,45 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						if(initial(C.discipline_type) == "Chi")
 							if(has_chi_one)
 								possible_new_disciplines -= i
-				if (possible_new_disciplines.len && (true_experience >= 10))
+				if (possible_new_disciplines.len && (player_experience >= 10))
 					dat += "<a href='byond://?_src_=prefs;preference=newchidiscipline;task=input'>Learn a new Discipline (10)</a><BR>"
 
-			if(true_experience >= 3 && slotlocked)
-				dat += "<a href='byond://?_src_=prefs;preference=change_appearance;task=input'>Change Appearance (3)</a><BR>"
+			if(slotlocked)
+				dat += "<a href='byond://?_src_=prefs;preference=change_appearance;task=input'>Change Appearance (Free)</a><BR>"
 			if(generation_bonus)
 				dat += "<a href='byond://?_src_=prefs;preference=reset_with_bonus;task=input'>Create new character with generation bonus ([generation]-[generation_bonus])</a><BR>"
-			// TFN EDIT ADDITION START: headshots, flavortext, and morality system
+			// TFN EDIT ADDITION START: headshots, flavortext, morality system, and most other TFN specific prefs
 			if(pref_species.name == "Vampire")
 				dat += "<h2>[make_font_cool("PATH")]</h2>"
 				dat += "<b>[morality_path.name]:</b> [path_score]/10"
-				if ((true_experience >= (path_score * 2)) && (path_score < 10))
+				if ((player_experience >= (path_score * 2)) && (path_score < 10))
 					dat += " <a href='byond://?_src_=prefs;preference=path;task=input'>Increase Path ([path_score * 2])</a>"
 				if(!slotlocked)
 					dat += "<a href='byond://?_src_=prefs;preference=pathof;task=input'>Switch Path</a>"
 				dat += "<BR><b>Description:</b> [morality_path.desc]<BR>"
 
+			var/preview_text = copytext_char(flavor_text, 1, 110)
+			var/preview_text_nsfw = copytext_char(flavor_text_nsfw, 1, 110)
+
+			dat += "<BR><a href='byond://?_src_=prefs;preference=view_flavortext;task=input'>Show Examine Panel</a>"
+
 			if(length(flavor_text) <= 110)
-				dat += "<BR><b>Flavor Text:</b> [flavor_text] <a href='byond://?_src_=prefs;preference=flavor_text;task=input'>Change</a><BR>"
+				dat += "<BR><b>Flavor Text:</b> [flavor_text] <a href='byond://?_src_=prefs;preference=flavor_text;task=input'>Change</a>"
 			else
-				dat += "<BR><b>Flavor Text:</b> [copytext_char(flavor_text, 1, 110)]... <a href='byond://?_src_=prefs;preference=flavor_text;task=input'>Change</a>"
-				dat += "<a href='byond://?_src_=prefs;preference=view_flavortext;task=input'>Show More</a><BR>"
+				dat += "<BR><b>Flavor Text:</b> [preview_text]... <a href='byond://?_src_=prefs;preference=flavor_text;task=input'>Change</a>"
 
-			dat += "<BR><b>OOC Notes:</b> [ooc_notes] <a href='byond://?_src_=prefs;preference=ooc_notes;task=input'>Change</a><BR>"
+			dat += "<BR><b>Character Notes:</b> [character_notes] <a href='byond://?_src_=prefs;preference=character_notes;task=input'>Change</a>"
 
-			dat += "<br><b>Headshot(1:1):</b> <a href='byond://?_src_=prefs;preference=headshot;task=input'>Change</a>"
-			if(headshot_link != null)
-				dat += "<a href='byond://?_src_=prefs;preference=view_headshot;task=input'>View</a>"
+			dat += "<BR><b>Headshot(1:1):</b> <a href='byond://?_src_=prefs;preference=headshot;task=input'>Change</a>"
+
+			dat += "<BR><b>NSFW Content:</b> <a href='byond://?_src_=prefs;preference=nsfw_content_preference'>[(nsfw_content_pref) ? "Enabled" : "Disabled"]</A>"
+			if(nsfw_content_pref)
+				if(length(flavor_text_nsfw) <= 110)
+					dat += "<BR><b>Flavor Text (NSFW):</b> [flavor_text_nsfw] <a href='byond://?_src_=prefs;preference=flavor_text_nsfw;task=input'>Change</a>"
+				else
+					dat += "<BR><b>Flavor Text (NSFW):</b> [preview_text_nsfw]... <a href='byond://?_src_=prefs;preference=flavor_text_nsfw;task=input'>Change</a>"
+				dat += "<BR><b>OOC Notes:</b> [ooc_notes] <a href='byond://?_src_=prefs;preference=ooc_notes;task=input'>Change</a>"
+
 			// TFN EDIT ADDITION END
 			dat += "<h2>[make_font_cool("EQUIP")]</h2>"
 
@@ -1102,7 +1092,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 			dat += "<b>FPS:</b> <a href='byond://?_src_=prefs;preference=clientfps;task=input'>[clientfps]</a><br>"
 
-			dat += "<b>Parallax (Fancy Space):</b> <a href='byond://?_src_=prefs;preference=parallaxdown' oncontextmenu='window.location.href=\"?_src_=prefs;preference=parallaxup\";return false;'>"
+			dat += "<b>Parallax (Fancy Space):</b> <a href='byond://?_src_=prefs;preference=parallaxdown' oncontextmenu='window.location.href=byond://?_src_=prefs;preference=parallaxup;return false;'>"
 			switch (parallax)
 				if (PARALLAX_LOW)
 					dat += "Low"
@@ -1289,7 +1279,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 //A proc that creates the score circles based on attribute and the additional bonus for the attribute
 //
-/datum/preferences/proc/build_attribute_score(var/attribute, var/bonus_number, var/price, var/variable_name)
+/datum/preferences/proc/build_attribute_score(attribute, bonus_number, price, variable_name)
 	var/dat
 	for(var/a in 1 to attribute)
 		dat += "•"
@@ -1299,7 +1289,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	for(var/c in 1 to leftover_circles)
 		dat += "o"
 	var/real_price = attribute ? (attribute*price) : price //In case we have an attribute of 0, we don't multiply by 0
-	if((true_experience >= real_price) && (attribute < ATTRIBUTE_BASE_LIMIT))
+	if((player_experience >= real_price) && (attribute < ATTRIBUTE_BASE_LIMIT))
 		dat += "<a href='byond://?_src_=prefs;preference=[variable_name];task=input'>Increase ([real_price])</a>"
 	dat += "<br>"
 	return dat
@@ -1352,7 +1342,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		HTML += "<b>Choose occupation chances</b><br>"
 		HTML += "<div align='center'>Left-click to raise an occupation preference, right-click to lower it.<br></div>"
 		HTML += "<center><a href='byond://?_src_=prefs;preference=job;task=close'>Done</a></center><br>" // Easier to press up here.
-		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
+		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='byond://?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
 		HTML += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>" // Table within a table for alignment, also allows you to easily add more colomns.
 		HTML += "<table width='100%' cellpadding='1' cellspacing='0'>"
 		var/index = -1
@@ -1364,7 +1354,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		if (check_rights_for(user.client, R_ADMIN))
 			bypass = TRUE
 
-		for(var/datum/job/job in sortList(SSjob.occupations, GLOBAL_PROC_REF(cmp_job_display_asc)))
+		for(var/datum/job/job in sort_list(SSjob.occupations, GLOBAL_PROC_REF(cmp_job_display_asc)))
 
 			index += 1
 			if((index >= limit) || (job.title in splitJobs))
@@ -1401,6 +1391,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if(!job.player_old_enough(user.client) && !bypass)
 				var/available_in_days = job.available_in_days(user.client)
 				HTML += "<font color=#290204>[rank]</font></td><td><font color=#290204> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
+				continue
+			if(!bypass && !job.is_character_old_enough(user.client.prefs.total_age))
+				HTML += "<font color=#290204>[rank]</font></td><td><font color=#290204> \[AT LEAST [job.minimum_character_age] YEARS OLD\]</font></td></tr>"
 				continue
 			if((generation > job.minimal_generation) && !bypass)
 				HTML += "<font color=#290204>[rank]</font></td><td><font color=#290204> \[FROM [job.minimal_generation] GENERATION AND OLDER\]</font></td></tr>"
@@ -1463,7 +1456,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					prefUpperLevel = 3
 					prefLowerLevel = 1
 
-			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
+			HTML += "<a class='white' href='byond://?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
 
 			if(rank == SSjob.overflow_role)//Overflow is special
 				if(job_preferences[SSjob.overflow_role] == JP_LOW)
@@ -1694,7 +1687,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				for(var/alternative_titles in J.alt_titles)
 					titles_list += alternative_titles
 				var/chosen_title
-				chosen_title = tgui_input_list(user, "Choose your job's title:", "Job Preference", sortList(titles_list))
+				chosen_title = tgui_input_list(user, "Choose your job's title:", "Job Preference", sort_list(titles_list))
 				if(chosen_title)
 					if(chosen_title == job_title)
 						if(alt_titles_preferences[job_title])
@@ -2048,7 +2041,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						eye_color = sanitize_hexcolor(new_eyes)
 
 				if("newdiscipline")
-					if((true_experience < 10) || !(pref_species.id == "kindred") || !(clane.name == "Caitiff"))
+					if((player_experience < 10) || !(pref_species.id == "kindred") || !(clane.name == "Caitiff"))
 						return
 
 					var/list/possible_new_disciplines = subtypesof(/datum/discipline) - discipline_types - /datum/discipline/bloodheal
@@ -2057,25 +2050,27 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						if (discipline.clan_restricted)
 							possible_new_disciplines -= discipline_type
 						qdel(discipline)
-					var/new_discipline = tgui_input_list(user, "Select your new Discipline", "Discipline Selection", sortList(possible_new_disciplines))
+					var/new_discipline = tgui_input_list(user, "Select your new Discipline", "Discipline Selection", sort_list(possible_new_disciplines))
 					if(new_discipline)
 						discipline_types += new_discipline
 						discipline_levels += 1
-						true_experience -= 10
+						player_experience -= 10
+						experience_used_on_character += 10
 
 				if("newghouldiscipline")
-					if((true_experience < 10) || !(pref_species.id == "ghoul"))
+					if((player_experience < 10) || !(pref_species.id == "ghoul"))
 						return
 
 					var/list/possible_new_disciplines = subtypesof(/datum/discipline) - discipline_types - /datum/discipline/bloodheal
-					var/new_discipline = tgui_input_list(user, "Select your new Discipline", "Discipline Selection", sortList(possible_new_disciplines))
+					var/new_discipline = tgui_input_list(user, "Select your new Discipline", "Discipline Selection", sort_list(possible_new_disciplines))
 					if(new_discipline)
 						discipline_types += new_discipline
 						discipline_levels += 1
-						true_experience -= 10
+						player_experience -= 10
+						experience_used_on_character += 10
 
 				if("newchidiscipline")
-					if((true_experience < 10) || !(pref_species.id == "kuei-jin"))
+					if((player_experience < 10) || !(pref_species.id == "kuei-jin"))
 						return
 
 					var/list/possible_new_disciplines = subtypesof(/datum/chi_discipline) - discipline_types
@@ -2103,18 +2098,19 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 							if(initial(C.discipline_type) == "Chi")
 								if(has_chi_one)
 									possible_new_disciplines -= i
-					var/new_discipline = tgui_input_list(user, "Select your new Discipline", "Discipline Selection", sortList(possible_new_disciplines))
+					var/new_discipline = tgui_input_list(user, "Select your new Discipline", "Discipline Selection", sort_list(possible_new_disciplines))
 					if(new_discipline)
 						discipline_types += new_discipline
 						discipline_levels += 1
-						true_experience -= 10
+						player_experience -= 10
+						experience_used_on_character += 10
 
 				if("werewolf_color")
 					if(slotlocked || !(pref_species.id == "garou"))
 						return
 
 					var/list/colors = list("black", "gray", "red", "white", "ginger", "brown")
-					var/result = tgui_input_list(user, "Select fur color:", "Appearance Selection", sortList(colors))
+					var/result = tgui_input_list(user, "Select fur color:", "Appearance Selection", sort_list(colors))
 					if(result)
 						werewolf_color = result
 
@@ -2202,7 +2198,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						else
 							available_clans[V.name] += GLOB.clanes_list[i]
 						qdel(V)
-					var/result = tgui_input_list(user, "Select a clane", "Clane Selection", sortList(available_clans))
+					var/result = tgui_input_list(user, "Select a clane", "Clane Selection", sort_list(available_clans))
 					if(result)
 						var/newtype = GLOB.clanes_list[result]
 						clane = new newtype()
@@ -2219,7 +2215,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 									if (discipline.clan_restricted)
 										possible_new_disciplines -= discipline_type
 									qdel(discipline)
-								var/new_discipline = tgui_input_list(user, "Select a Discipline", "Discipline Selection", sortList(possible_new_disciplines))
+								var/new_discipline = tgui_input_list(user, "Select a Discipline", "Discipline Selection", sort_list(possible_new_disciplines))
 								if (new_discipline)
 									clane.clane_disciplines += new_discipline
 						for (var/i in 1 to clane.clane_disciplines.len)
@@ -2249,12 +2245,27 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 								clane_accessory = "none"
 							else
 								clane_accessory = pick(clane.accessories)
-				if("auspice_level")
-					var/cost = max(10, auspice_level * 10)
-					if ((true_experience < cost) || (auspice_level >= 3))
+
+				if("derangement")
+
+					if(!(pref_species.id == "kindred" ) || clane.name != CLAN_MALKAVIAN)
 						return
 
-					true_experience -= cost
+					if(!(clane.name == CLAN_MALKAVIAN))
+						return
+
+					if (tgui_alert(user, "Are you sure you want to change your derangement? Madness is more mundane than insanity.", "Confirmation", list("Yes", "No")) != "Yes")
+						return
+
+					derangement = !derangement
+
+				if("auspice_level")
+					var/cost = max(10, auspice_level * 10)
+					if ((player_experience < cost) || (auspice_level >= 3))
+						return
+
+					player_experience -= cost
+					experience_used_on_character += cost
 					auspice_level = max(1, auspice_level + 1)
 
 				if("physique")
@@ -2289,7 +2300,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					if(slotlocked || !(pref_species.id == "garou"))
 						return
 
-					var/new_tribe = tgui_input_list(user, "Choose your Tribe:", "Tribe", sortList(list("Wendigo", "Glasswalkers", "Black Spiral Dancers")))
+					var/new_tribe = tgui_input_list(user, "Choose your Tribe:", "Tribe", sort_list(list("Wendigo", "Glasswalkers", "Black Spiral Dancers")))
 					if (new_tribe)
 						tribe = new_tribe
 
@@ -2297,7 +2308,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					if(slotlocked || !(pref_species.id == "garou"))
 						return
 
-					var/new_breed = tgui_input_list(user, "Choose your Breed:", "Breed", sortList(list("Homid", "Metis", "Lupus")))
+					var/new_breed = tgui_input_list(user, "Choose your Breed:", "Breed", sort_list(list("Homid", "Metis", "Lupus")))
 					if (new_breed)
 						breed = new_breed
 
@@ -2312,7 +2323,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					for(var/i in subtypesof(/datum/archetype))
 						var/datum/archetype/the_archetype = i
 						archetypes[initial(the_archetype.name)] = i
-					var/result = tgui_input_list(user, "Select an archetype", "Attributes Selection", sortList(archetypes))
+					var/result = tgui_input_list(user, "Select an archetype", "Attributes Selection", sort_list(archetypes))
 					if(result)
 						archetype = archetypes[result]
 						var/datum/archetype/archetip = new archetype()
@@ -2337,10 +2348,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						else if (clane.clane_disciplines.Find(discipline_types[i]))
 							cost = discipline_level * 5
 
-						if ((true_experience < cost) || (discipline_level >= 5))
+						if ((player_experience < cost) || (discipline_level >= 5))
 							return
 
-						true_experience -= cost
+						player_experience -= cost
+						experience_used_on_character += cost
 						discipline_levels[i] = min(5, max(1, discipline_levels[i] + 1))
 
 					if(pref_species.id == "kuei-jin")
@@ -2351,18 +2363,20 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						if (discipline_level <= 0)
 							cost = 10
 
-						if ((true_experience < cost) || (discipline_level >= 5))
+						if ((player_experience < cost) || (discipline_level >= 5))
 							return
 
-						true_experience -= cost
+						player_experience -= cost
+						experience_used_on_character += cost
 						discipline_levels[a] = min(5, max(1, discipline_levels[a] + 1))
 
 				if("path")
 					var/cost = max(2, path_score * 2)
-					if ((true_experience < cost) || (path_score >= 10) || !(pref_species.id == "kindred"))
+					if ((player_experience < cost) || (path_score >= 10) || !(pref_species.id == "kindred"))
 						return
 
-					true_experience -= cost
+					player_experience -= cost
+					experience_used_on_character += cost
 					path_score = clamp(path_score + 1, MIN_PATH_SCORE, MAX_PATH_SCORE)
 
 				if("pathof")
@@ -2380,7 +2394,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						available_paths[M.name] += GLOB.morality_list
 						qdel(M)
 
-					var/result = tgui_input_list(user, "Select a Path", "Path Selection", sortList(available_paths))
+					var/result = tgui_input_list(user, "Select a Path", "Path Selection", sort_list(available_paths))
 					if(result)
 						var/newtype = GLOB.morality_list[result]
 						morality_path = new newtype()
@@ -2392,10 +2406,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 								is_enlightened = TRUE
 
 				if("dharmarise")
-					if ((true_experience < min((dharma_level * 5), 20)) || (dharma_level >= 6) || !(pref_species.id == "kuei-jin"))
+					if ((player_experience < min((dharma_level * 5), 20)) || (dharma_level >= 6) || !(pref_species.id == "kuei-jin"))
 						return
 
-					true_experience -= min((dharma_level * 5), 20)
+					player_experience -= min((dharma_level * 5), 20)
+					experience_used_on_character += min((dharma_level * 5), 20)
 					dharma_level = clamp(dharma_level + 1, 1, 6)
 
 					if (dharma_level >= 6)
@@ -2403,14 +2418,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						po += 1
 						yin += 1
 						yang += 1
-
-				/*
-				if("torpor_restore")
-					if(torpor_count != 0 && true_experience >= 3*(14-generation))
-						torpor_count = 0
-						true_experience = true_experience-(3*(14-generation))
-				*/
-
 
 				if("dharmatype")
 					if(slotlocked)
@@ -2421,7 +2428,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					for(var/i in subtypesof(/datum/dharma))
 						var/datum/dharma/dharma = i
 						dharmas += initial(dharma.name)
-					var/result = tgui_input_list(user, "Select Dharma", "Dharma", sortList(dharmas))
+					var/result = tgui_input_list(user, "Select Dharma", "Dharma", sort_list(dharmas))
 					if(result)
 						for(var/i in subtypesof(/datum/dharma))
 							var/datum/dharma/dharma = i
@@ -2437,7 +2444,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					if(slotlocked)
 						return
 					var/list/pos = list("Rebel", "Legalist", "Demon", "Monkey", "Fool")
-					var/result = tgui_input_list(user, "Select P'o", "P'o", sortList(pos))
+					var/result = tgui_input_list(user, "Select P'o", "P'o", sort_list(pos))
 					if(result)
 						po_type = result
 
@@ -2458,10 +2465,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						po = max_limit-sett
 
 				if("generation")
-					if((clane?.name == "Caitiff") || (true_experience < 20))
+					if((clane?.name == "Caitiff") || (player_experience < 20))
 						return
 
-					true_experience -= 20
+					player_experience -= 20
+					experience_used_on_character += 20
 					if(SSwhitelists.is_whitelisted(user.ckey, TRUSTED_PLAYER))
 						generation_bonus = min(generation_bonus + 1, max(0, generation-MAX_TRUSTED_GENERATION))
 					else
@@ -2482,29 +2490,36 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				// TODO: Completely revamp flavor text into a more expansive system - TFN
 				// TFN EDIT ADDITION START: character headshots & flavortext
 				if("ooc_notes")
-					var/new_ooc_notes = tgui_input_text(user, "Choose your character's OOC notes:", "Character Preference", ooc_notes, MAX_MESSAGE_LEN, multiline = TRUE)
+					var/new_ooc_notes = tgui_input_text(user, "Choose your OOC notes:", "Character Preference", ooc_notes, MAX_FLAVOR_LEN, multiline = TRUE, encode = FALSE)
 					if(!length(new_ooc_notes))
 						return
-					ooc_notes = new_ooc_notes
+					ooc_notes = STRIP_HTML_SIMPLE(new_ooc_notes, MAX_FLAVOR_LEN)
+
+				if("character_notes")
+					var/new_character_notes = tgui_input_text(user, "Choose your character notes:", "Character Preference", character_notes, MAX_FLAVOR_LEN, multiline = TRUE, encode = FALSE)
+					if(!length(new_character_notes))
+						return
+					character_notes = STRIP_HTML_SIMPLE(new_character_notes, MAX_FLAVOR_LEN)
+					SSoverwatch.record_action(user, "**CHARACTER NOTES**: [character_notes]")
 
 				if("flavor_text")
-					var/new_flavor = tgui_input_text(user, "Choose your character's flavor text:", "Character Preference", flavor_text, MAX_FLAVOR_LEN, multiline = TRUE)
+					var/new_flavor = tgui_input_text(user, "Choose your character's flavor text:", "Character Preference", flavor_text, MAX_FLAVOR_LEN, multiline = TRUE, encode = FALSE)
 					if(!length(new_flavor))
 						return
-					flavor_text = new_flavor
+					flavor_text = STRIP_HTML_SIMPLE(new_flavor, MAX_FLAVOR_LEN)
+					SSoverwatch.record_action(user, "**FLAVORTEXT**: [flavor_text]")
+
+				if("flavor_text_nsfw")
+					var/new_flavor_nsfw = tgui_input_text(user, "Choose your character's NSFW flavor text:", "Character Preference", flavor_text_nsfw, MAX_FLAVOR_LEN, multiline = TRUE, encode = FALSE)
+					if(!length(new_flavor_nsfw))
+						return
+					flavor_text_nsfw = STRIP_HTML_SIMPLE(new_flavor_nsfw, MAX_FLAVOR_LEN)
 
 				if("view_flavortext")
-					var/datum/browser/popup = new(user, "[real_name]_flavortext", real_name, 500, 200)
-					popup.set_content(replacetext(flavor_text, "\n", "<BR>"))
-					popup.open(FALSE)
-					return
-
-				if("view_headshot")
-					var/list/dat = list("<table width='100%' height='100%'><td align='center' valign='middle'><img src='[headshot_link]' width='250px' height='250px'></td></table>")
-					var/datum/browser/popup = new(user, "[real_name]_headshot", "<div align='center'>Headshot</div>", 310, 330)
-					popup.set_content(dat.Join())
-					popup.open(FALSE)
-					return
+					// The examine preview dummy will be cleaned up once the user closes the TGUI window.
+					var/mob/living/carbon/human/dummy/mannequin = generate_or_wait_for_human_dummy()
+					mannequin.setup_examine_preview(user.client)
+					mannequin.tgui?.ui_interact(usr)
 
 				if("headshot")
 					to_chat(user, span_notice("Please use a relatively SFW image of the head and shoulder area to maintain immersion level. Lastly, ["<b>do not use a real life photo or use any image that is less than serious.</b>"]"))
@@ -2523,7 +2538,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						return
 					headshot_link = new_headshot_link
 					to_chat(user, span_notice("Successfully updated headshot picture!"))
-					log_game("[user] has set their Headshot image to '[headshot_link]'.")
+					log_game("[key_name(user)] has set their Headshot image to '[headshot_link]'.")
+					SSoverwatch.record_action(user, "[key_name(user)] has set their Headshot image to [headshot_link]")
 				// TFN EDIT ADDITION END
 				if("change_appearance")
 					if(!slotlocked)
@@ -2564,7 +2580,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						choose_species += key
 						qdel(selecting_species)
 
-					var/result = tgui_input_list(user, "Select a species", "Species Selection", sortList(choose_species))
+					var/result = tgui_input_list(user, "Select a species", "Species Selection", sort_list(choose_species))
 					if(result)
 						all_quirks.Cut()
 						SetQuirks(user)
@@ -2749,7 +2765,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 							friendlyname += " (disabled)"
 						maplist[friendlyname] = VM.map_name
 					maplist[default] = null
-					var/pickedmap = input(user, "Choose your preferred map. This will be used to help weight random map selection.", "Character Preference")  as null|anything in sortList(maplist)
+					var/pickedmap = input(user, "Choose your preferred map. This will be used to help weight random map selection.", "Character Preference")  as null|anything in sort_list(maplist)
 					if (pickedmap)
 						preferred_map = maplist[pickedmap]
 
@@ -2760,7 +2776,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						if(parent)
 							parent.fps = (clientfps < 0) ? RECOMMENDED_FPS : clientfps
 				if("ui")
-					var/pickedui = input(user, "Choose your UI style.", "Character Preference", UI_style)  as null|anything in sortList(GLOB.available_ui_styles)
+					var/pickedui = input(user, "Choose your UI style.", "Character Preference", UI_style)  as null|anything in sort_list(GLOB.available_ui_styles)
 					if(pickedui)
 						UI_style = pickedui
 						if (parent?.mob.hud_used)
@@ -2882,7 +2898,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						if(!length(key_bindings[old_key]))
 							key_bindings -= old_key
 					key_bindings[full_key] += list(kb_name)
-					key_bindings[full_key] = sortList(key_bindings[full_key])
+					key_bindings[full_key] = sort_list(key_bindings[full_key])
 
 					user << browse(null, "window=capturekeypress")
 					user.client.set_macros()
@@ -2974,6 +2990,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 				if("lover")
 					lover = !lover
+
+				if("nsfw_content_preference")
+					nsfw_content_pref = !nsfw_content_pref
 
 				if("persistent_scars")
 					persistent_scars = !persistent_scars
@@ -3112,6 +3131,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				if("reset_all")
 					if (tgui_alert(user, "Are you sure you want to reset your character?", "Confirmation", list("Yes", "No")) != "Yes")
 						return
+					player_experience += experience_used_on_character
 					reset_character()
 
 				if("changeslot")
@@ -3133,10 +3153,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	ShowChoices(user)
 	return TRUE
 
-/datum/preferences/proc/handle_upgrade(var/number, var/cost)
-	if ((true_experience < cost) || (number >= ATTRIBUTE_BASE_LIMIT))
+/datum/preferences/proc/handle_upgrade(number, cost)
+	if ((player_experience < cost) || (number >= ATTRIBUTE_BASE_LIMIT))
 		return FALSE
-	true_experience -= cost
+	player_experience -= cost
+	experience_used_on_character += cost
 	return TRUE
 
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1, roundstart_checks = TRUE, character_setup = FALSE, antagonist = FALSE, is_latejoiner = TRUE)
@@ -3191,9 +3212,17 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	character.additional_lockpicking = A.archetype_additional_lockpicking
 	character.additional_athletics = A.archetype_additional_athletics
 	A.special_skill(character)
+	character.maxHealth = round((initial(character.maxHealth)+(initial(character.maxHealth)/4)*(character.physique + character.additional_physique)))
+	character.health = character.maxHealth
 
 	if(pref_species.name == "Vampire")
 		var/datum/vampireclane/CLN = new clane.type()
+
+		if(CLN.name == CLAN_MALKAVIAN)
+			var/datum/vampireclane/malkavian/malk = new clane.type()
+			malk.derangement = derangement
+			CLN = malk
+
 		var/datum/morality/MOR = new morality_path.type()
 		character.clane = CLN
 		character.morality_path = MOR
@@ -3223,8 +3252,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			character.max_yin_chi = 2
 
 	if(pref_species.name == "Werewolf")
-		character.maxHealth = round((initial(character.maxHealth)+(initial(character.maxHealth)/4)*(character.physique + character.additional_physique)))
-		character.health = character.maxHealth
 		switch(tribe)
 			if("Wendigo")
 				character.yin_chi = 1
@@ -3241,13 +3268,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				character.max_yin_chi = 1 + auspice_level * 2
 				character.yang_chi = 5
 				character.max_yang_chi = 5
-	if(pref_species.name == "Kuei-Jin")
-		character.maxHealth = round((initial(character.maxHealth)+(initial(character.maxHealth)/4)*(character.physique + character.additional_physique)))
-		character.health = character.maxHealth
 	if(pref_species.name == "Vampire")
-		character.maxHealth = round((initial(character.maxHealth)+(initial(character.maxHealth)/4)*(character.physique + character.additional_physique)))
-		character.health = character.maxHealth
 		character.morality_path.score = path_score
+
 	character.masquerade = masquerade
 	if(!character_setup)
 		if(character in GLOB.masquerade_breakers_list)
@@ -3257,7 +3280,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			GLOB.masquerade_breakers_list += character
 
 	character.flavor_text = sanitize_text(flavor_text)
+	character.flavor_text_nsfw = sanitize_text(flavor_text_nsfw)
 	character.ooc_notes = sanitize_text(ooc_notes)
+	character.character_notes = sanitize_text(character_notes)
 	character.gender = gender
 	character.age = age
 	character.chronological_age = total_age
@@ -3334,41 +3359,49 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				character.auspice.gnosis = 3
 				character.auspice.start_gnosis = 3
 				character.auspice.base_breed = "Crinos"
-		if(character.transformator)
-			if(character.transformator.crinos_form && character.transformator.lupus_form)
-				character.transformator.crinos_form.sprite_color = werewolf_color
-				character.transformator.crinos_form.sprite_scar = werewolf_scar
-				character.transformator.crinos_form.sprite_hair = werewolf_hair
-				character.transformator.crinos_form.sprite_hair_color = werewolf_hair_color
-				character.transformator.crinos_form.sprite_eye_color = werewolf_eye_color
-				character.transformator.lupus_form.sprite_color = werewolf_color
-				character.transformator.lupus_form.sprite_eye_color = werewolf_eye_color
+		if(character.transformator?.crinos_form && character.transformator?.lupus_form)
+			var/mob/living/carbon/werewolf/crinos/crinos = character.transformator.crinos_form?.resolve()
+			var/mob/living/carbon/werewolf/lupus/lupus = character.transformator.lupus_form?.resolve()
 
-				if(werewolf_name)
-					character.transformator.crinos_form.name = werewolf_name
-					character.transformator.lupus_form.name = werewolf_name
-				else
-					character.transformator.crinos_form.name = real_name
-					character.transformator.lupus_form.name = real_name
+			if(!crinos)
+				character.transformator.crinos_form = null
+				CRASH("[key_name(character)]'s crinos_form weakref contained no crinos mob!")
+			if(!lupus)
+				character.transformator.lupus_form = null
+				CRASH("[key_name(character)]'s lupus_form weakref contained no lupus mob!")
 
-				character.transformator.crinos_form.physique = physique
-				character.transformator.crinos_form.dexterity = dexterity
-				character.transformator.crinos_form.mentality = mentality
-				character.transformator.crinos_form.social = social
-				character.transformator.crinos_form.blood = blood
+			crinos.sprite_color = werewolf_color
+			crinos.sprite_scar = werewolf_scar
+			crinos.sprite_hair = werewolf_hair
+			crinos.sprite_hair_color = werewolf_hair_color
+			crinos.sprite_eye_color = werewolf_eye_color
+			lupus.sprite_color = werewolf_color
+			lupus.sprite_eye_color = werewolf_eye_color
 
-				character.transformator.lupus_form.physique = physique
-				character.transformator.lupus_form.dexterity = dexterity
-				character.transformator.lupus_form.mentality = mentality
-				character.transformator.lupus_form.social = social
-				character.transformator.lupus_form.blood = blood
+			if(werewolf_name)
+				crinos.name = werewolf_name
+				lupus.name = werewolf_name
+			else
+				crinos.name = real_name
+				lupus.name = real_name
 
-				character.transformator.lupus_form.maxHealth = round((initial(character.transformator.lupus_form.maxHealth)+(initial(character.maxHealth)/4)*(character.physique + character.additional_physique )))+(character.auspice.level-1)*50
-				character.transformator.lupus_form.health = character.transformator.lupus_form.maxHealth
-				character.transformator.crinos_form.maxHealth = round((initial(character.transformator.crinos_form.maxHealth)+(initial(character.maxHealth)/4)*(character.physique + character.additional_physique )))+(character.auspice.level-1)*50
-				character.transformator.crinos_form.health = character.transformator.crinos_form.maxHealth
-//		character.transformator.crinos_form.update_icons()
-//		character.transformator.lupus_form.update_icons()
+			crinos.physique = physique
+			crinos.dexterity = dexterity
+			crinos.mentality = mentality
+			crinos.social = social
+			crinos.blood = blood
+
+			lupus.physique = physique
+			lupus.dexterity = dexterity
+			lupus.mentality = mentality
+			lupus.social = social
+			lupus.blood = blood
+
+			lupus.maxHealth = round((lupus::maxHealth + (character::maxHealth / 4) * (character.physique + character.additional_physique))) + (character.auspice.level - 1) * 50
+			lupus.health = lupus.maxHealth
+			crinos.maxHealth = round((crinos::maxHealth + (character::maxHealth / 4) * (character.physique + character.additional_physique))) + (character.auspice.level - 1) * 50
+			crinos.health = crinos.maxHealth
+
 	if(pref_species.mutant_bodyparts["tail_lizard"])
 		character.dna.species.mutant_bodyparts["tail_lizard"] = pref_species.mutant_bodyparts["tail_lizard"]
 	if(pref_species.mutant_bodyparts["spines"])

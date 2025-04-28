@@ -93,7 +93,7 @@
 	random_color = FALSE
 
 /obj/item/paper/guides/antag/nuke_instructions
-	info = "How to break into a Nanotrasen self-destruct terminal and remove its plutonium core:<br>\
+	default_raw_text = "How to break into a Nanotrasen self-destruct terminal and remove its plutonium core:<br>\
 	<ul>\
 	<li>Use a screwdriver with a very thin tip (provided) to unscrew the terminal's front panel</li>\
 	<li>Dislodge and remove the front panel with a crowbar</li>\
@@ -106,7 +106,7 @@
 // STEALING SUPERMATTER
 
 /obj/item/paper/guides/antag/supermatter_sliver
-	info = "How to safely extract a supermatter sliver:<br>\
+	default_raw_text = "How to safely extract a supermatter sliver:<br>\
 	<ul>\
 	<li>Approach an active supermatter crystal with radiation shielded personal protective equipment. DO NOT MAKE PHYSICAL CONTACT.</li>\
 	<li>Use a supermatter scalpel (provided) to slice off a sliver of the crystal.</li>\
@@ -140,7 +140,7 @@
 			return FALSE
 		forceMove(tongs)
 		tongs.sliver = src
-		tongs.update_icon()
+		tongs.update_appearance()
 		to_chat(user, "<span class='notice'>You carefully pick up [src] with [tongs].</span>")
 	else if(istype(W, /obj/item/scalpel/supermatter) || istype(W, /obj/item/nuke_core_container/supermatter/)) // we don't want it to dust
 		return
@@ -253,6 +253,7 @@
 /obj/item/hemostat/supermatter/update_icon_state()
 	icon_state = "supermatter_tongs[sliver ? "_loaded" : null]"
 	inhand_icon_state = "supermatter_tongs[sliver ? "_loaded" : null]"
+	return ..()
 
 /obj/item/hemostat/supermatter/afterattack(atom/O, mob/user, proximity)
 	. = ..()
@@ -266,7 +267,7 @@
 		sliver.forceMove(loc)
 		visible_message("<span class='notice'>\The [sliver] falls out of \the [src] as it hits the ground.</span>")
 		sliver = null
-		update_icon()
+		update_appearance()
 	return ..()
 
 /obj/item/hemostat/supermatter/proc/Consume(atom/movable/AM, mob/living/user)
@@ -291,4 +292,4 @@
 	radiation_pulse(src, 500, 2)
 	playsound(src, 'sound/effects/supermatter.ogg', 50, TRUE)
 	QDEL_NULL(sliver)
-	update_icon()
+	update_appearance()

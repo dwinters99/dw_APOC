@@ -54,9 +54,9 @@
 		//Generic Buttons anyone can use.
 		if("admin_log")
 			var/dat
-			for(var/l in GLOB.admin_log)
+			for(var/l in GLOB.admin_activities)
 				dat += "<li>[l]</li>"
-			if(!GLOB.admin_log.len)
+			if(!GLOB.admin_activities.len)
 				dat += "No-one has done anything this round!"
 			var/datum/browser/browser = new(usr, "admin_log", "Admin Logs", 600, 500)
 			browser.set_content(dat)
@@ -238,7 +238,7 @@
 					var/datum/round_event_control/disease_outbreak/DC = locate(/datum/round_event_control/disease_outbreak) in SSevents.control
 					E = DC.runEvent()
 				if("Choose")
-					var/virus = input("Choose the virus to spread", "BIOHAZARD") as null|anything in sortList(typesof(/datum/disease), GLOBAL_PROC_REF(cmp_typepaths_asc))
+					var/virus = input("Choose the virus to spread", "BIOHAZARD") as null|anything in sort_list(typesof(/datum/disease), GLOBAL_PROC_REF(cmp_typepaths_asc))
 					var/datum/round_event_control/disease_outbreak/DC = locate(/datum/round_event_control/disease_outbreak) in SSevents.control
 					var/datum/round_event/disease_outbreak/DO = DC.runEvent()
 					DO.virus_type = virus

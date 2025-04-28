@@ -69,7 +69,11 @@ GLOBAL_LIST_EMPTY(req_console_ckey_departments)
 	max_integrity = 300
 	armor = list(MELEE = 70, BULLET = 30, LASER = 30, ENERGY = 30, BOMB = 0, BIO = 0, RAD = 0, FIRE = 90, ACID = 90)
 
+
+MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/requests_console, 30)
+
 /obj/machinery/requests_console/update_icon_state()
+	. = ..()
 	if(machine_stat & NOPOWER)
 		set_light(0)
 	else
@@ -265,7 +269,7 @@ GLOBAL_LIST_EMPTY(req_console_ckey_departments)
 			var/mob/living/L = usr
 			message = L.treat_message(message)
 		minor_announce(message, "[department] Announcement:", html_encode = FALSE)
-		GLOB.news_network.SubmitArticle(message, department, "Station Announcements", null)
+		GLOB.news_network.submit_article(message, department, "Station Announcements", null)
 		usr.log_talk(message, LOG_SAY, tag="station announcement from [src]")
 		message_admins("[ADMIN_LOOKUPFLW(usr)] has made a station announcement from [src] at [AREACOORD(usr)].")
 		deadchat_broadcast(" made a station announcement from <span class='name'>[get_area_name(usr, TRUE)]</span>.", "<span class='name'>[usr.real_name]</span>", usr, message_type=DEADCHAT_ANNOUNCEMENT)

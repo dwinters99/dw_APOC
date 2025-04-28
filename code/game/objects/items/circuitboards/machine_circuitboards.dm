@@ -360,7 +360,7 @@
 			display_vending_names_paths = list()
 			for(var/path in vending_names_paths)
 				display_vending_names_paths[vending_names_paths[path]] = path
-		var/choice =  input(user,"Choose a new brand","Select an Item") as null|anything in sortList(display_vending_names_paths)
+		var/choice =  input(user,"Choose a new brand","Select an Item") as null|anything in sort_list(display_vending_names_paths)
 		set_type(display_vending_names_paths[choice])
 	else
 		return ..()
@@ -401,14 +401,14 @@
 		/obj/item/stock_parts/micro_laser = 1
 	)
 
-/obj/item/circuitboard/machine/accounting
-	name = "Account Registration Device (Machine Board)"
-	icon_state = "command"
-	build_path = /obj/machinery/accounting
+/obj/item/circuitboard/machine/fax
+	name = "Fax Machine"
+	build_path = /obj/machinery/fax
 	req_components = list(
-		/obj/item/stock_parts/card_reader = 1,
-		/obj/item/stock_parts/scanning_module = 1
-	)
+		/obj/item/stock_parts/subspace/crystal = 1,
+		/obj/item/stock_parts/scanning_module = 1,
+		/obj/item/stock_parts/micro_laser = 1,
+		/obj/item/stock_parts/manipulator = 1,)
 
 //Medical
 

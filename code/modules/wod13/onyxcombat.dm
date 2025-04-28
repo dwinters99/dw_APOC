@@ -36,9 +36,6 @@
 
 	if(iskindred(src) || iscathayan(src))
 		can_be_embraced = FALSE
-		var/obj/item/organ/brain/brain = getorganslot(ORGAN_SLOT_BRAIN) //NO REVIVAL EVER
-		if (brain)
-			brain.organ_flags |= ORGAN_FAILING
 
 		if(in_frenzy)
 			exit_frenzymod()
@@ -199,7 +196,7 @@
 		return
 	..()
 
-/mob/living/carbon/human/proc/Parry(var/mob/M)
+/mob/living/carbon/human/proc/Parry(mob/M)
 	if(!pulledby && !parrying && world.time-parry_cd >= 30 && M != src)
 		parrying = M
 		if(blocking)
@@ -473,38 +470,6 @@
 		setDir(harm_focus)
 	else
 		harm_focus = dir
-
-/atom/Click(location,control,params)
-	if(ishuman(usr))
-		if(isopenturf(src.loc) || isopenturf(src))
-			var/list/modifiers = params2list(params)
-			var/mob/living/carbon/human/HUY = usr
-			if(!HUY.get_active_held_item() && Adjacent(usr))
-				if(LAZYACCESS(modifiers, "right"))
-					var/list/shit = list()
-					var/obj/item/item_to_pick
-					var/turf/T
-					if(isturf(src))
-						T = src
-					else
-						T = src.loc
-					for(var/obj/item/I in T)
-						if(I)
-							if(!I.anchored)
-								shit[I.name] = I
-						if(length(shit) == 1)
-							item_to_pick = I
-					if(length(shit) >= 2)
-						var/result = input(usr, "Select the item you want to pick up.", "Pick up") as null|anything in shit
-						if(result)
-							item_to_pick = shit[result]
-						else
-							return
-					if(item_to_pick)
-						if(HUY.CanReach(item_to_pick))
-							HUY.put_in_active_hand(item_to_pick)
-						return
-	..()
 
 /mob/living/carbon/werewolf/Life()
 	. = ..()
