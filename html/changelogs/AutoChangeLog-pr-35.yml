@@ -1,0 +1,15 @@
+author: "FalloutFalcon, hex37"
+delete-after: True
+changes:
+  - rscadd: "You now have to enter your pin of purchases over 20$ or after 5 uses"
+  - rscadd: "The booze vendor is now sorted by catagory"
+  - rscadd: "Vending machines now have a few extra items"
+  - rscadd: "Few new retail store types for mappers to chew on"
+  - rscdel: "IDs no longer hold your bank account info"
+  - rscdel: "Vending machines no longer have price inflated by players having money sitting in there bank'"
+  - qol: "you can now easily buy goods with both your creditcard and cash from vending machines and retail outlets"
+  - balance: "some fast food has gotten cheaper"
+  - bugfix: "fixed almost all behavoir of old vendors, you can now use them pretty much"
+  - refactor: "major refactors to vending machines and retail outlets"
+  - refactor: "all vending machiens are now acctually vending machines"
+  - refactor: "vending machines and retail stores share spritesheets and other code (should be faster)"
