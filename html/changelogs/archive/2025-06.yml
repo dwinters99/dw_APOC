@@ -25,3 +25,5 @@
   - rscadd: New players now have the cool dice roll message on by default. This will
       not affect existing players.
   - bugfix: Trash piles can no longer be pushed around.
+  - rscdel: Removed the display of bpm for music because no one cares and its often
+      innacurate anyway
