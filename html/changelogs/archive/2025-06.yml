@@ -21,3 +21,4 @@
   - bugfix: Daughters of Cacophony are now allowed to become taxi drivers again.
   - rscdel: IDs no longer have bank accounts attached to them.
   - qol: Debit cards have replaced IDs for most cash based interactions
+  - bugfix: phones are now indexed by 1 instead of 0. Should fix alot of runtimes
