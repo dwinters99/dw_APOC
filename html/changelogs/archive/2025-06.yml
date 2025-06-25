@@ -22,3 +22,6 @@
   - rscdel: IDs no longer have bank accounts attached to them.
   - qol: Debit cards have replaced IDs for most cash based interactions
   - bugfix: phones are now indexed by 1 instead of 0. Should fix alot of runtimes
+  - rscadd: New players now have the cool dice roll message on by default. This will
+      not affect existing players.
+  - bugfix: Trash piles can no longer be pushed around.
