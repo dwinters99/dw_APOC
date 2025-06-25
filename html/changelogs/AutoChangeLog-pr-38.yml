@@ -1,0 +1,4 @@
+author: "FalloutFalcon"
+delete-after: True
+changes:
+  - rscadd: "New players now have the cool dice roll message on by default. This will not affect existing players."
