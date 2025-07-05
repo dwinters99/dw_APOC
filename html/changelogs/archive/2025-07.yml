@@ -8,3 +8,5 @@
   - qol: trash on the streets is now cleanable
   - qol: more fluff in the city can be properly damaged
   - refactor: few unrelated refactors to try and speed up init
+  - bugfix: changelog uses our server name and credits former vtm servers
+  - bugfix: more interfaces use our repo links
