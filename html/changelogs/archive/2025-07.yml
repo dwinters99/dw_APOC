@@ -15,3 +15,5 @@
   - admin: exiting via matrix is now logged
   - bugfix: removed the hear flag on credit cards preventing them from showing up
       it subtle
+  - rscadd: new music tracks all over the place!
+  - bugfix: opening the map may lag less
