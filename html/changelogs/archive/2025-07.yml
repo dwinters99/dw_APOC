@@ -17,3 +17,4 @@
       it subtle
   - rscadd: new music tracks all over the place!
   - bugfix: opening the map may lag less
+  - rscdel: Removed alot of old tg species code, nothing player facing i think
