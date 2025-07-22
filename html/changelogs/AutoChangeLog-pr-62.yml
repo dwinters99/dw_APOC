@@ -1,0 +1,7 @@
+author: "SetchDreskar"
+delete-after: True
+changes:
+  - rscadd: "Added Lupus Wolfkin as its own friendly mob!"
+  - map: "Removed old wolfkin corgi reskin from map"
+  - map: "Added new Lupus Wolfkin to current map"
+  - code_imp: "Added lines 145 to 214 in dog.dm"
