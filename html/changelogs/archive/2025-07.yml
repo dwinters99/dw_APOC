@@ -22,3 +22,6 @@
   FalloutFalcon:
   - rscdel: rats no longer disable if no one is in range of them
   - balance: rats spawn every 200~ steps in the sewers instead of 10~
+2025-07-22:
+  INFRARED_BARON, Spooky, PositiveEntropy:
+  - image: A variety of tiles have been upgraded!
