@@ -25,3 +25,8 @@
 2025-07-22:
   INFRARED_BARON, Spooky, PositiveEntropy:
   - image: A variety of tiles have been upgraded!
+  SetchDreskar:
+  - rscadd: Added Lupus Wolfkin as its own friendly mob!
+  - map: Removed old wolfkin corgi reskin from map
+  - map: Added new Lupus Wolfkin to current map
+  - code_imp: Added lines 145 to 214 in dog.dm
