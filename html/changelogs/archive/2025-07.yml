@@ -30,3 +30,5 @@
   - map: Removed old wolfkin corgi reskin from map
   - map: Added new Lupus Wolfkin to current map
   - code_imp: Added lines 145 to 214 in dog.dm
+  imaginos_:
+  - image: Replaces corax sprites
