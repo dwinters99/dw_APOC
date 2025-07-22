@@ -597,7 +597,7 @@
 /turf/open/floor/plating/parquetry
 	gender = PLURAL
 	name = "parquetry"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "parquet"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -649,7 +649,7 @@
 /turf/open/floor/plating/vampgrass
 	gender = PLURAL
 	name = "grass"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "grass1"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -714,7 +714,7 @@
 /turf/open/floor/plating/vampcarpet
 	gender = PLURAL
 	name = "carpet"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "carpet_black"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -727,7 +727,7 @@
 /turf/open/floor/plating/vampdirt
 	gender = PLURAL
 	name = "dirt"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "dirt"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -805,7 +805,7 @@
 /turf/open/floor/plating/vampplating
 	gender = PLURAL
 	name = "plating"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "plating"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -824,7 +824,7 @@
 /turf/open/floor/plating/rough
 	gender = PLURAL
 	name = "rough floor"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "rough"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -975,7 +975,7 @@
 /turf/open/floor/plating/church
 	gender = PLURAL
 	name = "fancy plating"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "church1"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -992,7 +992,7 @@
 /turf/open/floor/plating/saint
 	gender = PLURAL
 	name = "fancy plating"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "saint1"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -1147,7 +1147,7 @@
 /turf/open/floor/plating/vampwood
 	gender = PLURAL
 	name = "wood"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "bwood"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -1396,7 +1396,7 @@
 /turf/open/floor/plating/bacotell
 	gender = PLURAL
 	name = "plating"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "bacotell"
 	flags_1 = NONE
 	attachment_holes = FALSE
@@ -1409,7 +1409,7 @@
 /turf/open/floor/plating/gummaguts
 	gender = PLURAL
 	name = "plating"
-	icon = 'code/modules/wod13/tiles.dmi'
+	icon = 'modular_zapoc/tiles.dmi'
 	icon_state = "gummaguts"
 	flags_1 = NONE
 	attachment_holes = FALSE
