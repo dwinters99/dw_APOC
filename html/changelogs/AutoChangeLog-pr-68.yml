@@ -1,0 +1,4 @@
+author: "generalthrax"
+delete-after: True
+changes:
+  - rscdel: "Removed weird quirk descriptions"
