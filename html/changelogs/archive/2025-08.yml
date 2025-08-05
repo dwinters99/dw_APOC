@@ -10,3 +10,6 @@
 2025-08-04:
   dwinters99:
   - bugfix: Hispo form invisibility fix
+2025-08-05:
+  dwinters99:
+  - bugfix: Unduplicates hispo form button
