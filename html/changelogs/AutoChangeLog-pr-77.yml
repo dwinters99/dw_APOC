@@ -1,0 +1,4 @@
+author: "dwinters99"
+delete-after: True
+changes:
+  - qol: "Mirrors no longer rudely ignore Lasombra vampires"
