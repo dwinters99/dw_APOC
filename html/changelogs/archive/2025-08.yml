@@ -13,3 +13,6 @@
 2025-08-05:
   dwinters99:
   - bugfix: Unduplicates hispo form button
+2025-08-07:
+  dwinters99:
+  - qol: Mirrors no longer rudely ignore Lasombra vampires
