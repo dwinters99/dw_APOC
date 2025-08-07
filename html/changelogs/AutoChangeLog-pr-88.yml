@@ -1,4 +1,0 @@
-author: "FalloutFalcon"
-delete-after: True
-changes:
-  - rscadd: "turf type that mimics the edges of the map."

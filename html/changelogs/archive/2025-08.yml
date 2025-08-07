@@ -14,5 +14,7 @@
   dwinters99:
   - bugfix: Unduplicates hispo form button
 2025-08-07:
+  FalloutFalcon:
+  - rscadd: turf type that mimics the edges of the map.
   dwinters99:
   - qol: Mirrors no longer rudely ignore Lasombra vampires
