@@ -24,17 +24,6 @@
 
 /proc/call_minimap()
 	var/user = usr
-/*	var/static/list/map_icons = list(
-		"supply" = "Railway Station",
-		"church" = "Church",
-		"graveyard" = "City Graveyard",
-		"hotel" = "Hotel",
-		"tower" = "Millenium Tower",
-		"clean" = "Cleaning Services",
-		"theatre" = "National Theatre",
-		"bar" = "Bar"
-		"hospital" = "City Hospital"
-	)*/
 	var/static/list/map_icons = list(
 		"tower" = "Millenium Tower",
 		"hospital" = "Hospital",
@@ -92,7 +81,7 @@
 	icon_state = "target"
 	layer = ABOVE_HUD_LAYER
 
-/*
+/* Live updating doesn't work and is out of scope, leaving this here for posterity
 /obj/effect/overlay/map_target/Initialize(mapload, mob/living/user)
 	. = ..()
 	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(update_position))
