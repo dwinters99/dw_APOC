@@ -16,6 +16,17 @@
 	using.hud = src
 	static_inventory += using
 
+
+/datum/hud/werewolf/New(mob/living/carbon/werewolf/owner) // Should work with transformations now
+	..()
+	var/atom/movable/screen/using
+	using = new /atom/movable/screen/minimap
+	using.icon = 'modular_zapoc/modules/minimap/icons/minimap.dmi'
+	using.icon_state = "map"
+	using.screen_loc = ui_minimap
+	using.hud = src
+	static_inventory += using
+
 /atom/movable/screen/minimap
 	name = "city map"
 
