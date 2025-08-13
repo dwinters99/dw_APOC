@@ -56,7 +56,7 @@
 	user << browse(dat, "window=map;size=400x600;border=1;can_resize=0;can_minimize=0")
 	onclose(user, "map", src)
 	qdel(DAMAP)
-*/ //APOC EDIT END
+*/ // APOC EDIT END
 /obj/effect/mob_spawn/human/citizen
 	name = "just a civilian"
 	desc = "A humming sleeper with a silhouetted occupant inside. Its stasis function is broken and it's likely being used as a bed."
