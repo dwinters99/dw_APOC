@@ -23,5 +23,8 @@
   - qol: Trash can be put in the source container
   - rscadd: Clan Ravnos!
 2025-08-13:
+  FalloutFalcon:
+  - rscdel: Removed erp toggle button that does nothing.
   dwinters99:
   - bugfix: Animalism 1 rats no longer planeshift
+  - rscadd: Eat Food quirk
