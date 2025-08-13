@@ -25,6 +25,7 @@
 2025-08-13:
   FalloutFalcon:
   - rscdel: Removed erp toggle button that does nothing.
+  - bugfix: fix gaining money by spending your card at retail stores
   dwinters99:
   - bugfix: Animalism 1 rats no longer planeshift
   - rscadd: Eat Food quirk
