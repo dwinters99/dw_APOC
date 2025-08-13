@@ -1,4 +1,0 @@
-author: "dwinters99"
-delete-after: True
-changes:
-  - qol: "Hunger is paused after 10 seconds of inactivity."

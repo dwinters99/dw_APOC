@@ -30,6 +30,7 @@
   - bugfix: Animalism 1 rats no longer planeshift
   - rscadd: Eat Food quirk
   - code_imp: Cleaned up some comments
+  - qol: Hunger is paused after 10 seconds of inactivity.
   phoaly, dwinters99:
   - map: Removed Graveyard and Tzimisce Manor
   - map: Added Voivodate Manor
