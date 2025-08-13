@@ -1,6 +1,6 @@
 //Pretty sure this does not need to exist
 /obj/damap
-	icon = 'modular_zapoc/modules/minimap/icons/largemap.dmi' // ZAPOC EDIT CHANGE 'code/modules/wod13/map.dmi'
+	icon = 'modular_zapoc/modules/minimap/icons/largemap.dmi' // APOC EDIT CHANGE 'code/modules/wod13/map.dmi'
 	icon_state = "map"
 	plane = GAME_PLANE
 	layer = ABOVE_NORMAL_TURF_LAYER
@@ -16,7 +16,7 @@
 	density = TRUE
 
 /obj/structure/vampmap/attack_hand(mob/user)
-// ZAPOC EDIT START
+// APOC EDIT START
 	call_minimap(usr)
 /*
 	. = ..()
@@ -56,7 +56,7 @@
 	user << browse(dat, "window=map;size=400x600;border=1;can_resize=0;can_minimize=0")
 	onclose(user, "map", src)
 	qdel(DAMAP)
-*/ //ZAPOC EDIT END
+*/ //APOC EDIT END
 /obj/effect/mob_spawn/human/citizen
 	name = "just a civilian"
 	desc = "A humming sleeper with a silhouetted occupant inside. Its stasis function is broken and it's likely being used as a bed."
