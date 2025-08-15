@@ -5,7 +5,7 @@ GLOBAL_LIST_INIT(leader_positions, list(
 	"Police Chief",
 	"Dealer",
 	"Capo",
-	"Clinic Director"
+//Apoc edit	"Clinic Director"
 	))
 
 GLOBAL_LIST_INIT(command_positions, list(
@@ -30,7 +30,8 @@ GLOBAL_LIST_INIT(anarch_positions, list(
 	"Baron",
 	"Emissary",
 	"Sweeper",
-	"Bruiser"
+	"Bruiser",
+	"Barkeep"
 	))
 
 GLOBAL_LIST_INIT(citizen_positions, list(
@@ -65,7 +66,7 @@ GLOBAL_LIST_INIT(services_positions, list(
 ))
 
 GLOBAL_LIST_INIT(clinic_positions, list(
-	"Clinic Director",
+//Apoc Edit	"Clinic Director",
 	"Doctor"
 ))
 
