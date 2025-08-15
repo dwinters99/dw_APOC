@@ -1,0 +1,4 @@
+author: "dwinters99 & Paynt"
+delete-after: True
+changes:
+  - bugfix: "BSD hispos now have the correct sprites"
