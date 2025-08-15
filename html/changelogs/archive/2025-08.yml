@@ -45,8 +45,11 @@
   - rscadd: New preference for your phone number subscriber code
   - rscadd: Added an extra didgits to subscriber code and uses real san fran area
       code
+  - bugfix: Aghosting does not remove right click popup
   Latentish:
   - balance: Changed what bloodlines are available where
   - map: Tweaked the hospital
+  dwinters99:
+  - qol: Blood extractors are now less annoying to use
   dwinters99 & Paynt:
   - bugfix: BSD hispos now have the correct sprites
