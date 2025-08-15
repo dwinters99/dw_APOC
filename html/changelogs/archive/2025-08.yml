@@ -40,3 +40,8 @@
       jobs
   - code_imp: Added Bogatyr Captain and Voivodate Citizen Jobs
   - code_imp: Disabled Gravekeeper job
+2025-08-15:
+  FalloutFalcon:
+  - rscadd: New preference for your phone number subscriber code
+  - rscadd: Added an extra didgits to subscriber code and uses real san fran area
+      code
