@@ -1,0 +1,5 @@
+author: "Latentish"
+delete-after: True
+changes:
+  - bugfix: "fixed voivode position edgecase"
+  - code_imp: "standardized apoc edit comments and filestructure"
