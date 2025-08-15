@@ -49,6 +49,8 @@
   Latentish:
   - balance: Changed what bloodlines are available where
   - map: Tweaked the hospital
+  - bugfix: fixed voivode position edgecase
+  - code_imp: standardized apoc edit comments and filestructure
   dwinters99:
   - qol: Blood extractors are now less annoying to use
   - spellcheck: Descriptions on Presence 4 and 5 are SLIGHTLY clearer
