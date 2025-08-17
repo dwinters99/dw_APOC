@@ -1,25 +1,27 @@
 /mob/dead/observer/avatar/
 	var/returning = FALSE // Are we recalling right now?
-	var/stuck = FALSE
-	var/stuck_safety = 0
 	sound_environment_override = SOUND_ENVIRONMENT_DRUGGED
+
+/obj/vampire_car/handle_caring() // This SUUUUUCKS.
+	var/mob/dead/observer/avatar/AA
+	if(passengers.len || !isnull(driver))
+		if(AA.mind.current in passengers || AA.mind.current == driver) // Is our host in a running/moving car?
+			if(speed_in_pixels)
+				AA.finalize_reenter_corpse()
+
+	. = ..()
+
 
 /mob/dead/observer/avatar/Move(NewLoc)
 	var/mob/living/carbon/human/H = mind.current
-
-	if(stuck_safety <= 10)
-	if(get_dist(NewLoc, get_turf(H)) >= 23) // How are we so far away?
+	if(get_dist(NewLoc, get_turf(H)) > 22) // How are we so far away?
 		to_chat(src, span_warning("Your connection to your physical form weakens, forcing to recenter yourself."))
 		finalize_reenter_corpse()
 		return FALSE
 
-	if(get_dist(NewLoc, get_turf(H)) >= 22) // Skip movement if we're too far
+	if(get_dist(NewLoc, get_turf(H)) == 22) // Skip movement if we're too far
 		to_chat(src, span_warning("Your connection to your physical form weakens, preventing you from moving any further!"))
-		stuck = TRUE
-		stuck_safety++
 		return FALSE
-
-	stuck = FALSE
 
 	..()
 
@@ -35,14 +37,8 @@
 	else
 		S.alpha = round(dist_mod*12)
 
-
-	if(prob(0.1)) // || src.loc.area.protected == TRUE) // This is for later and probably won't be implemented this way
-		to_chat(src, span_warning("Your concentration lapses..."))
-		if(!(SSroll.storyteller_roll(H.get_total_mentality(), difficulty = 6, mobs_to_show_output = null) == ROLL_SUCCESS))
-			playsound(src, 'modular_zapoc/modules/auspex_5_mini/sound/avatar_cancel.ogg', 10, ignore_walls = TRUE) // Alert others of the peeping tom
-			to_chat(src, span_boldwarning("...revealing your presence!"))
-		else
-			to_chat(src, span_notice("...but you manage to regain your focus."))
+	if(prob(50)) // || src.loc.area.protected == TRUE) // This is for later and probably won't be implemented this way
+		espionage_check(src, H)
 
 	if(get_turf(src) == get_turf(mind.current.loc) && returning) // Stop moving and reenter corpse if we're on top of ourselves. No effect unless reenter_corpse() is running.
 		walk(src, 0)
@@ -50,10 +46,34 @@
 		returning = FALSE
 
 
+/mob/dead/observer/avatar/proc/espionage_check(mob/dead/observer/user, mob/living/carbon/body)
+	var/peepers = view(7, user) // List of things we can see
+	var/peepers_mobs = list()
+
+	for(var/mob/living/carbon/C in peepers) // Populare peepers_mobs
+		if(!(C == user))
+		peepers_mobs += C
+
+	var/peepers_len = LAZYLEN(peepers_mobs) // How many?
+
+	to_chat(user, span_warning("Your concentration lapses..."))
+	var/roll_result = SSroll.storyteller_roll(body.get_total_mentality(), difficulty = peepers_len, mobs_to_show_output = user) // Roll for initiative
+
+	if(roll_result == ROLL_SUCCESS)
+		to_chat(user, span_notice("...but you manage to regain your focus.")) // Phew...
+		return TRUE
+	else
+		for(var/mob/living/carbon/_C in peepers_mobs) // Anyone hear that?
+			if(!(ishumanbasic(_C))) // Normal humans can't hear ghosts
+				if(SSroll.storyteller_roll(_C.get_total_mentality(), difficulty = (body.get_total_mentality()), mobs_to_show_output = null) == ROLL_SUCCESS) // Are we smart enough to hear the peeping tom?
+					SEND_SOUND(user, sound('modular_zapoc/modules/auspex_5_mini/sound/avatar_cancel.ogg', 0, 0, 10))
+		to_chat(user, span_boldwarning("...revealing your presence!"))
+
+
 /mob/dead/observer/avatar/proc/finalize_reenter_corpse()
 	var/mob/living/carbon/human/original_body = mind.current
 
-	client.view_size.setDefault(getScreenSize(client.prefs.widescreenpref))//Let's reset so people can't become allseeing gods
+	client.view_size.setDefault(getScreenSize(client.prefs.widescreenpref)) // Let's reset so people can't become allseeing gods
 	SStgui.on_transfer(src, mind.current)
 	mind.current.key = key
 	mind.current.client.init_verbs()
@@ -77,7 +97,7 @@
 
 	if(isnull(body_turf) || isnull(current_turf))
 		return FALSE
-	if(returning) // First line in this proc tha is different than the auspex_avatar.dm version
+	if(returning) // First line in this proc that is different than the auspex_avatar.dm version
 		walk(src, 0) // Cancel recall
 		to_chat(src, span_warning("You force your mind's eye to dig in it's psychic heels, cancelling the recall."))
 		returning = FALSE
