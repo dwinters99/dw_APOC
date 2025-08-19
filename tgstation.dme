@@ -3765,5 +3765,8 @@
 #include "modular_zapoc\modules\carpets\code\carpets.dm"
 #include "modular_zapoc\modules\eat_food\code\quirks_zapoc.dm"
 #include "modular_zapoc\modules\ravnos\code\ravnos.dm"
+#include "modular_zapoc\modules\tg69825_statpanelitems\code\connect_mob_behalf.dm"
+#include "modular_zapoc\modules\tg69825_statpanelitems\code\stat_panel_tracking.dm"
+#include "modular_zapoc\modules\tg69825_statpanelitems\code\subsystem_obj_tab_items.dm"
 #include "modular_zapoc\modules\tiles\code\tiles.dm"
 // END_INCLUDE
