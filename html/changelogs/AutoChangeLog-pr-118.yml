@@ -1,6 +1,0 @@
-author: "Erikafox"
-delete-after: True
-changes:
-  - rscadd: "you can now add chemicals to weed, for bongs. it's too late for me to figure out for rollies"
-  - rscadd: "weed now makes you slower and hungrier"
-  - balance: "removed lipolicide from most weed substances"
