@@ -545,7 +545,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	SSserver_maint.UpdateHubStatus()
 	if(credits)
 		QDEL_LIST(credits)
-	if(obj_window)
+	if(obj_window) // APOC EDIT ADD
 		QDEL_NULL(obj_window)
 	if(holder)
 		adminGreet(1)

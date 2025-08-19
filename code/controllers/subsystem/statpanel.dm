@@ -8,7 +8,7 @@ SUBSYSTEM_DEF(statpanels)
 	var/list/currentrun = list()
 	var/list/global_data
 	var/list/mc_data
-
+//	var/list/cached_images = list() // APOC EDIT REMOVE
 
 	///how many subsystem fires between most tab updates
 	var/default_wait = 10
@@ -80,10 +80,10 @@ SUBSYSTEM_DEF(statpanels)
 					set_spells_tab(target, target_mob)
 
 
-			// Handle the examined turf of the stat panel, if it's been long enough, or if we've generated new images for it
+			// APOC EDIT START // Handle the examined turf of the stat panel, if it's been long enough, or if we've generated new images for it
 			var/turf/listed_turf = target_mob?.listed_turf
 			if(listed_turf && num_fires % default_wait == 0)
-				if(target.stat_tab == listed_turf.name || !(listed_turf.name in target.panel_tabs))
+				if(target.stat_tab == listed_turf.name || !(listed_turf.name in target.panel_tabs)) // APOC EDIT END
 					set_turf_examine_tab(target, target_mob)
 
 		if(MC_TICK_CHECK)
@@ -159,12 +159,13 @@ SUBSYSTEM_DEF(statpanels)
 
 /datum/controller/subsystem/statpanels/proc/set_turf_examine_tab(client/target, mob/target_mob)
 	var/list/overrides = list()
+//	var/list/turfitems = list() APOC EDIT REMOVE
 	for(var/image/target_image as anything in target.images)
 		if(!target_image.loc || target_image.loc.loc != target_mob.listed_turf || !target_image.override)
 			continue
 		overrides += target_image.loc
 
-	var/list/atoms_to_display = list(target_mob.listed_turf)
+	var/list/atoms_to_display = list(target_mob.listed_turf) // APOC EDIT CHANGE
 
 	for(var/atom/movable/turf_content as anything in target_mob.listed_turf)
 		if(turf_content.mouse_opacity == MOUSE_OPACITY_TRANSPARENT)
@@ -175,7 +176,7 @@ SUBSYSTEM_DEF(statpanels)
 			continue
 		if(turf_content.IsObscured())
 			continue
-		atoms_to_display += turf_content
+		atoms_to_display += turf_content // APOC EDIT START
 
 	/// Set the atoms we're meant to display
 	var/datum/object_window_info/obj_window = target.obj_window
@@ -222,7 +223,7 @@ SUBSYSTEM_DEF(statpanels)
 		obj_window.RegisterSignal(turf_item, COMSIG_PARENT_QDELETING, /datum/object_window_info/proc/viewing_atom_deleted) // we reset cache if anything in it gets deleted
 	return turf_items
 
-#undef OBJ_IMAGE_LOADING
+#undef OBJ_IMAGE_LOADING // APOC EDIT END
 
 /datum/controller/subsystem/statpanels/proc/generate_mc_data()
 	mc_data = list(
@@ -257,7 +258,7 @@ SUBSYSTEM_DEF(statpanels)
 
 	if(target_mob?.listed_turf)
 		if(!target_mob.TurfAdjacent(target_mob.listed_turf))
-			target_mob.set_listed_turf(null)
+			target_mob.set_listed_turf(null) // APOC EDIT ADD
 
 		else if(target.stat_tab == target_mob?.listed_turf.name || !(target_mob?.listed_turf.name in target.panel_tabs))
 			set_turf_examine_tab(target, target_mob)
@@ -279,6 +280,9 @@ SUBSYSTEM_DEF(statpanels)
 
 	else if(length(GLOB.sdql2_queries) && target.stat_tab == "SDQL2")
 		set_SDQL2_tab(target)
-
+/* APOC EDIT REMOVE
+/atom/proc/remove_from_cache()
+	SSstatpanels.cached_images -= REF(src)
+*/
 /// Stat panel window declaration
 /client/var/datum/tgui_window/stat_panel

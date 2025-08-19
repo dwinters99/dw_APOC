@@ -164,7 +164,7 @@
 	var/list/recent_examines
 
 	///Our object window datum. It stores info about and handles behavior for the object tab
-	var/datum/object_window_info/obj_window
+	var/datum/object_window_info/obj_window // APOC EDIT ADD
 
 	var/list/parallax_layers
 	var/list/parallax_layers_cached

@@ -501,13 +501,13 @@
 	SEND_SIGNAL(src, COMSIG_CLICK_ALT, user)
 	var/turf/T = get_turf(src)
 	if(T && (isturf(loc) || isturf(src)) && user.TurfAdjacent(T))
-		user.set_listed_turf(T)
+		user.set_listed_turf(T) // APOC EDIT START
 
 /// Use this instead of [/mob/proc/AltClickOn] where you only want turf content listing without additional atom alt-click interaction
 /atom/proc/AltClickNoInteract(mob/user, atom/A)
 	var/turf/T = get_turf(A)
 	if(T && user.TurfAdjacent(T))
-		user.set_listed_turf(T)
+		user.set_listed_turf(T) // APOC EDIT END
 
 /mob/proc/TurfAdjacent(turf/T)
 	return T.Adjacent(src)
