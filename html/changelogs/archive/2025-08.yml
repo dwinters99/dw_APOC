@@ -59,3 +59,8 @@
 2025-08-17:
   dwinters99:
   - code_imp: Ghost ears and eyes are now opt-in for new players
+2025-08-19:
+  FalloutFalcon:
+  - map: improved two houses
+  - qol: varedited curtains now acctually update
+  - qol: lights no longer start randomly broken
