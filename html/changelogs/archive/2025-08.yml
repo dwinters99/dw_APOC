@@ -75,6 +75,8 @@
   - bugfix: Round time notifications no longer sorted into deadchat. Now sorted into
       Warning.
 2025-08-20:
+  FalloutFalcon:
+  - qol: phones now have a visual effect played on the tile of the phone
   dwinters99:
   - admin: Canon toggle button no longer starts Team Deathmatch and produces less
       ear damage
