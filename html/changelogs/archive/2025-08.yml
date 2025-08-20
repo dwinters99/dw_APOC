@@ -80,3 +80,4 @@
   dwinters99:
   - admin: Canon toggle button no longer starts Team Deathmatch and produces less
       ear damage
+  - qol: Keys no longer need to be in the pockets or hand to be used.
