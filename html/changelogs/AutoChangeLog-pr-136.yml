@@ -1,0 +1,4 @@
+author: "FalloutFalcon"
+delete-after: True
+changes:
+  - rscdel: "Spawners no longer show up in the orbit menu."
