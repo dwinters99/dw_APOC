@@ -1,0 +1,5 @@
+author: "dwinters99"
+delete-after: True
+changes:
+  - balance: "They once again hunger"
+  - refactor: "Stationary hunger code is better"
