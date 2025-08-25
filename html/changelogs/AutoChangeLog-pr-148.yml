@@ -1,4 +1,0 @@
-author: "KCartridge"
-delete-after: True
-changes:
-  - bugfix: "fixed invisible Endron IDs"
