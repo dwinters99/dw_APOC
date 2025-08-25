@@ -1,0 +1,8 @@
+author: "FalloutFalcon"
+delete-after: True
+changes:
+  - qol: "subtle is sorted into local"
+  - qol: "p25 radios use the radio class and are now sorted into radio"
+  - qol: "5x lowered the volume of those evil radio cackles"
+  - qol: "Call history is boxed like examines"
+  - balance: "you 3 tiles or closer to hear radios"
