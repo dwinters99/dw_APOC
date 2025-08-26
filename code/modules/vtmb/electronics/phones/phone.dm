@@ -66,7 +66,7 @@
 	var/can_fold = 1
 	var/interface = "Telephone"
 	var/silence = FALSE
-	var/toggle_published_contacts = FALSE
+	var/toggle_published_contacts = TRUE // APOC EDIT CHANGE // Why is this opt in!!!!
 	var/list/published_numbers_contacts = list()
 	var/list/phone_history_list = list()
 
@@ -499,8 +499,8 @@
 					if(!toggle_published_contacts)
 						var/contacts_added_lenght = published_numbers_contacts.len
 						var/list_length = min(length(GLOB.published_numbers), length(GLOB.published_number_names))
-						log_admin(contacts_added_lenght)
-						log_admin(list_length)
+						log_admin("[contacts_added_lenght]") // APOC EDIT ADD // Runtimes without quotation marks
+						log_admin("[list_length]")
 						if(contacts_added_lenght < list_length)
 						// checks the size difference between the GLOB published list and the phone published list
 							var/ADDED_CONTACTS = 0
