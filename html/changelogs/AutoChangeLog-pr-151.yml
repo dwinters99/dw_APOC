@@ -1,0 +1,4 @@
+author: "KCartridge"
+delete-after: True
+changes:
+  - rscadd: "Ronin to Endron allowed_tribes"
