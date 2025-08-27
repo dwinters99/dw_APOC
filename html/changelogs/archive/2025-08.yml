@@ -112,5 +112,8 @@
   dwinters99:
   - bugfix: Organs no longer rot in freezer subtypes
 2025-08-27:
+  KCartridge:
+  - rscadd: Ronin to Endron allowed_tribes
   dwinters99:
   - rscadd: Gaia's Candor, a Philodox auspice gift
+  - rscadd: Layer change verb
