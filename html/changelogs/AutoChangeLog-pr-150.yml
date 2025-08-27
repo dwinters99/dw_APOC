@@ -1,0 +1,4 @@
+author: "KCartridge"
+delete-after: True
+changes:
+  - bugfix: "Tower Security, Tower Employee, Clinic Ids should now be visible"
