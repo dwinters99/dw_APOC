@@ -114,6 +114,7 @@
 2025-08-27:
   KCartridge:
   - rscadd: Ronin to Endron allowed_tribes
+  - bugfix: Tower Security, Tower Employee, Clinic Ids should now be visible
   dwinters99:
   - rscadd: Gaia's Candor, a Philodox auspice gift
   - rscadd: Layer change verb
