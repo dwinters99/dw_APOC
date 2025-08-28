@@ -5,6 +5,7 @@
 	var/datum/armor/added_armor = list(MELEE = 10)
 	var/upgrade_name
 	var/set_armor
+	var/upgrade_item_used // APOC EDIT ADD
 
 /datum/component/armor_plate/Initialize(_maxamount,obj/item/_upgrade_item,datum/armor/_added_armor,set_armor)
 	if(!isobj(parent))
@@ -63,10 +64,12 @@
 
 	if(istype(I,/obj/item/stack))
 		I.use(1)
+		upgrade_item_used = I
 	else
 		if(length(I.contents))
 			to_chat(user, "<span class='warning'>[I] cannot be used for armoring while there's something inside!</span>")
 			return
+		upgrade_item_used = I
 		qdel(I)
 
 	var/obj/O = parent
