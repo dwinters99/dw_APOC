@@ -3771,6 +3771,8 @@
 #include "modular_zapoc\modules\clothing\code\sancho.dm"
 #include "modular_zapoc\modules\crystal\code\crystal.dm"
 #include "modular_zapoc\modules\eat_food\code\quirks_zapoc.dm"
+#include "modular_zapoc\modules\ravnos\code\ravnos.dm"
+#include "modular_zapoc\modules\gaias_candor\code\gaias_candor.dm"
 #include "modular_zapoc\modules\imbued\code\conviction.dm"
 #include "modular_zapoc\modules\imbued\code\imbued_species.dm"
 #include "modular_zapoc\modules\imbued\code\smite.dm"
@@ -3787,6 +3789,8 @@
 #include "modular_zapoc\modules\statpanelitems\code\connect_mob_behalf.dm"
 #include "modular_zapoc\modules\statpanelitems\code\stat_panel_tracking.dm"
 #include "modular_zapoc\modules\statpanelitems\code\subsystem_obj_tab_items.dm"
+#include "modular_zapoc\modules\talldog\code\talldog.dm"
 #include "modular_zapoc\modules\ravnos\code\ravnos.dm"
 #include "modular_zapoc\modules\tiles\code\tiles.dm"
+#include "modular_zapoc\modules\verbs\code\layerchange.dm"
 // END_INCLUDE
