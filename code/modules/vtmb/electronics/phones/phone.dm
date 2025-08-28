@@ -81,6 +81,8 @@
 	var/list/datum/contact_network/contact_networks = null
 	var/important_contact_of = null
 
+	var/ringing = 0
+
 /obj/item/vamp/phone/Initialize()
 	. = ..()
 	RegisterSignal(src, COMSIG_MOVABLE_HEAR, PROC_REF(handle_hearing))
@@ -129,7 +131,8 @@
 
 /obj/item/vamp/phone/interact(mob/user)
 	. = ..()
-	ui_interact(user)
+	if(ringing) // APOC EDIT ADD
+		ui_interact(user)
 
 /obj/item/vamp/phone/ui_interact(mob/user, datum/tgui/ui)
 	. = ..()
@@ -162,7 +165,7 @@
 	data["my_number"] = choosed_number
 	data["choosed_number"] = choosed_number
 	if(online)
-		data["calling_user"] = "(+1 707) [online.number]"
+		data["calling_user"] = "(+1 [exchange_num]) [online.number]" // APOC EDIT CHANGE // Exchange number
 		for(var/datum/phonecontact/P in contacts)
 			if(P.number == online.number)
 				data["calling_user"] = P.name
@@ -338,7 +341,7 @@
 					to_chat(usr, "<span class='notice'>Invalid number.</span>")
 			.= TRUE
 		if("contacts")
-			var/list/options = list("Add","Remove","Choose","Block", "Unblock", "My Number", "Publish Number", "Published Numbers", "Call History", "Delete Call History")
+			var/list/options = list("Add","Remove","Choose","Block", "Unblock", "My Number", "Publish Number", "Published Numbers", "Unpublish Number", "Call History", "Delete Call History")
 			var/option =  tgui_input_list(usr, "Select an option", "Contacts Option", options)
 			var/result
 			switch(option)
@@ -377,6 +380,21 @@
 											PHN.contacts += NEWC
 					else
 						to_chat(usr, "<span class='notice'>You must input a name to publish your number.</span>")
+
+				if("Unpublish Number")
+					if(src.number in GLOB.published_numbers)
+						var/list/numberlist = GLOB.published_numbers
+						var/number_index = numberlist.Find(src.number)
+						GLOB.published_numbers -= src.number
+						GLOB.published_number_names -= GLOB.published_number_names[number_index]
+						to_chat(usr, span_notice("Your number has been unpublished."))
+						for(var/obj/item/vamp/phone/PHN in GLOB.phones_list)
+							if(PHN.toggle_published_contacts == TRUE)
+								for(var/datum/phonecontact/PC in PHN.contacts)
+									if(PC.number == src.number)
+										PHN.contacts -= PC
+					else
+						to_chat(usr, span_warning("Your number isn't published!"))
 
 				if ("Published Numbers")
 					var/list_length = min(length(GLOB.published_numbers), length(GLOB.published_number_names))
@@ -560,11 +578,13 @@
 				playsound(src, 'code/modules/wod13/sounds/phonestop.ogg', 25, FALSE)
 			online.online = null
 			online = null
+			ringing = 0
 	if(!talking && online)
 		if(online.silence == FALSE)
 			playsound(src, 'code/modules/wod13/sounds/phone.ogg', 10, FALSE)
 			playsound(online, online.call_sound, 25, FALSE)
 			new /obj/effect/temp_visual/phone/ringing(get_turf(online))
+			ringing = 1
 		addtimer(CALLBACK(src, PROC_REF(ring_callback), online, user), 20)
 
 /obj/item/vamp/phone/proc/handle_hearing(datum/source, list/hearing_args)
