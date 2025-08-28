@@ -124,7 +124,7 @@ export const changelog_labels = {
 		default_text: 'messed with admin stuff',
 		keywords: ['admin'],
 	},
-		'Server': {
+	'Server': {
 		default_text: 'something server ops should know',
 		keywords: ['server'],
 	},
