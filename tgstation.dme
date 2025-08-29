@@ -3760,6 +3760,7 @@
 #include "modular_tfn\modules\retail\stores\smoke_menu.dm"
 #include "modular_tfn\modules\subtle\subtle.dm"
 #include "modular_tfn\modules\taser_tfn13\taser_tfn13.dm"
+#include "modular_zapoc\modules\apoc_furniture\code\dye_machine.dm"
 #include "modular_zapoc\modules\apoc_jobs\voidodate_citizen.dm"
 #include "modular_zapoc\modules\apoc_jobs\job_types\_job.dm"
 #include "modular_zapoc\modules\carpets\code\carpets.dm"
