@@ -127,6 +127,9 @@
   dwinters99:
   - bugfix: white hispo rest dandruff removal
 2025-08-30:
+  FalloutFalcon:
+  - balance: limits the selection of the word to ones we have sprites for, no calling
+      out an area has vampires specificly
   KCartridge:
   - bugfix: cigarette overlay in cigar boxes
   - bugfix: A lot of items using the wrong hands.
