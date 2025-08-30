@@ -1,0 +1,4 @@
+author: "FalloutFalcon"
+delete-after: True
+changes:
+  - balance: "limits the selection of the word to ones we have sprites for, no calling out an area has vampires specificly"
