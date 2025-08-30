@@ -4,8 +4,6 @@
 /obj/item/organ/stomach/vampire/on_life()
 	. = ..()
 
-	to_chat(owner, span_adminsay("Capacity: [capacity]")) // !!!!!!!!DEBUG!!!!!!!!!!
-
 	if(owner)
 		if(HAS_TRAIT(owner, TRAIT_CAN_EAT))
 			capacity-- // Eat Food vampires eating good
