@@ -135,3 +135,6 @@
   - bugfix: A lot of items using the wrong hands.
   dwinters99:
   - bugfix: deadchat can be toggled again
+2025-08-31:
+  dwinters99:
+  - map: Autodecor grass
