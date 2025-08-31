@@ -23,6 +23,10 @@
 		to_chat(src, span_warning("Your connection to your physical form weakens, preventing you from moving any further!"))
 		return FALSE
 
+	if(get_dist(NewLoc, get_turf(H)) >= 18)
+		if(prob(5))
+			auspex_deafness(src)
+
 	..()
 
 	var/dist_mod = get_dist(loc, H.loc)
@@ -44,6 +48,17 @@
 		walk(src, 0)
 		finalize_reenter_corpse()
 		returning = FALSE
+
+/mob/dead/observer/avatar/proc/auspex_deafness(mob/dead/user)
+	if(HAS_TRAIT(src, TRAIT_DEAF))
+		REMOVE_TRAIT(src, TRAIT_DEAF)
+		to_chat(src, span_notice("Your psyche refocuses, your senses returning to you."))
+	else
+		SEND_SOUND(owner, sound('sound/weapons/flash_ring.ogg'))
+		to_chat(src, span_warning("Your psyche shudders, restricting your senses."))
+		ADD_TRAIT(src, TRAIT_DEAF, "auspex_avatar")
+		addtimer(CALLBACK(src, PROC_REF(auspex_blindness), user), 3 SECONDS)
+
 
 
 /mob/dead/observer/avatar/proc/espionage_check(mob/dead/observer/user, mob/living/carbon/body)
