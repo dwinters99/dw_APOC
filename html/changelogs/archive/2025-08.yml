@@ -138,3 +138,4 @@
 2025-08-31:
   dwinters99:
   - map: Autodecor grass
+  - config: PULL_REQUEST_TEMPLATE.md improvement
