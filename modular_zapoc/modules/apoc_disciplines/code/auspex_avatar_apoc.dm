@@ -13,6 +13,8 @@
 
 
 /mob/dead/observer/avatar/Move(NewLoc)
+	if(check_antighost_candle(NewLoc)) // APOC EDIT ADD START // Prevents ghosts from hanging out near smudge sticks
+		return // APOC EDIT ADD END
 	var/mob/living/carbon/human/H = mind.current
 	if(get_dist(NewLoc, get_turf(H)) > 22) // How are we so far away?
 		to_chat(src, span_warning("Your connection to your physical form weakens, forcing to recenter yourself."))
@@ -41,7 +43,7 @@
 	else
 		S.alpha = round(dist_mod*12)
 
-	if(prob(50)) // || src.loc.area.protected == TRUE) // This is for later and probably won't be implemented this way
+	if(prob(1)) // || src.loc.area.protected == TRUE) // This is for later and probably won't be implemented this way
 		espionage_check(src, H)
 
 	if(get_turf(src) == get_turf(mind.current.loc) && returning) // Stop moving and reenter corpse if we're on top of ourselves. No effect unless reenter_corpse() is running.
@@ -51,13 +53,13 @@
 
 /mob/dead/observer/avatar/proc/auspex_deafness(mob/dead/user)
 	if(HAS_TRAIT(src, TRAIT_DEAF)) // Are we already deaf?
-		REMOVE_TRAIT(src, TRAIT_DEAF)
+		REMOVE_TRAIT(src, TRAIT_DEAF, "auspex_avatar")
 		to_chat(src, span_notice("Your psyche refocuses, your senses returning to you."))
 	else // We aren't. Add deafness.
-		SEND_SOUND(owner, sound('sound/weapons/flash_ring.ogg'))
+		SEND_SOUND(user, sound('sound/weapons/flash_ring.ogg'))
 		to_chat(src, span_warning("Your psyche shudders, restricting your senses."))
 		ADD_TRAIT(src, TRAIT_DEAF, "auspex_avatar")
-		addtimer(CALLBACK(src, PROC_REF(auspex_blindness), user), 3 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(auspex_deafness), user), 3 SECONDS)
 
 
 
@@ -67,7 +69,7 @@
 
 	for(var/mob/living/carbon/C in peepers) // Populare peepers_mobs
 		if(!(C == user))
-		peepers_mobs += C
+			peepers_mobs += C // Jeepers!
 
 	var/peepers_len = LAZYLEN(peepers_mobs) // How many?
 
