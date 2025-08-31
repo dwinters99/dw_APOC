@@ -94,6 +94,11 @@
 		number = create_unique_phone_number(exchange_num, my_number)
 		GLOB.phone_numbers_list += number
 		GLOB.phones_list += src
+		var/autopublish = owner?.client?.prefs?.phone_autopublish
+		var/autopublish_name = owner?.client?.prefs?.phone_autopublish_name
+		if(autopublish)
+			GLOB.published_numbers += number
+			GLOB.published_number_names += autopublish_name
 		if(!isnull(owner) && owner.Myself)
 			owner.Myself.phone_number = number
 
