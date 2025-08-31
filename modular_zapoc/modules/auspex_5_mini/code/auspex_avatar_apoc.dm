@@ -23,7 +23,7 @@
 		to_chat(src, span_warning("Your connection to your physical form weakens, preventing you from moving any further!"))
 		return FALSE
 
-	if(get_dist(NewLoc, get_turf(H)) >= 18)
+	if(get_dist(NewLoc, get_turf(H)) >= 18) // Danger zone.
 		if(prob(5))
 			auspex_deafness(src)
 
@@ -50,10 +50,10 @@
 		returning = FALSE
 
 /mob/dead/observer/avatar/proc/auspex_deafness(mob/dead/user)
-	if(HAS_TRAIT(src, TRAIT_DEAF))
+	if(HAS_TRAIT(src, TRAIT_DEAF)) // Are we already deaf?
 		REMOVE_TRAIT(src, TRAIT_DEAF)
 		to_chat(src, span_notice("Your psyche refocuses, your senses returning to you."))
-	else
+	else // We aren't. Add deafness.
 		SEND_SOUND(owner, sound('sound/weapons/flash_ring.ogg'))
 		to_chat(src, span_warning("Your psyche shudders, restricting your senses."))
 		ADD_TRAIT(src, TRAIT_DEAF, "auspex_avatar")
@@ -85,10 +85,10 @@
 		to_chat(user, span_boldwarning("...revealing your presence!"))
 
 
-/mob/dead/observer/avatar/proc/finalize_reenter_corpse()
+/mob/dead/observer/avatar/proc/finalize_reenter_corpse() // Seperated for ease of use
 	var/mob/living/carbon/human/original_body = mind.current
 
-	client.view_size.setDefault(getScreenSize(client.prefs.widescreenpref)) // Let's reset so people can't become allseeing gods
+	client.view_size.setDefault(getScreenSize(client.prefs.widescreenpref))
 	SStgui.on_transfer(src, mind.current)
 	mind.current.key = key
 	mind.current.client.init_verbs()
