@@ -81,7 +81,7 @@
 		for(var/mob/living/carbon/_C in peepers_mobs) // Anyone hear that?
 			if(!(ishumanbasic(_C))) // Normal humans can't hear ghosts
 				if(SSroll.storyteller_roll(_C.get_total_mentality(), difficulty = (body.get_total_mentality()), mobs_to_show_output = null) == ROLL_SUCCESS) // Are we smart enough to hear the peeping tom?
-					SEND_SOUND(user, sound('modular_zapoc/modules/auspex_5_mini/sound/avatar_cancel.ogg', 0, 0, 10))
+					SEND_SOUND(user, sound('modular_zapoc/modules/apoc_disciplines/sound/avatar_cancel.ogg', 0, 0, 10))
 		to_chat(user, span_boldwarning("...revealing your presence!"))
 
 
@@ -128,7 +128,7 @@
 		walk_to(src, body_turf, 0) // Start recall
 		to_chat(src, span_warning("Your physical form begins to recall your mind's eye..."))
 		to_chat(src, span_notice("Click Reenter corpse again to cancel."))
-		SEND_SOUND(src, 'modular_zapoc/modules/auspex_5_mini/sound/avatar_cancel.ogg')
+		SEND_SOUND(src, 'modular_zapoc/modules/apoc_disciplines/sound/avatar_cancel.ogg')
 		return FALSE
 	else
 		finalize_reenter_corpse()
