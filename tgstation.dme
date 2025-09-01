@@ -89,6 +89,7 @@
 #include "code\__DEFINES\living.dm"
 #include "code\__DEFINES\logging.dm"
 #include "code\__DEFINES\machines.dm"
+#include "code\__DEFINES\map_switch.dm"
 #include "code\__DEFINES\maps.dm"
 #include "code\__DEFINES\materials.dm"
 #include "code\__DEFINES\maths.dm"
@@ -3790,6 +3791,7 @@
 #include "modular_zapoc\modules\mini_protean_update\code\mist_form.dm"
 #include "modular_zapoc\modules\ncr\code\ncr.dm"
 #include "modular_zapoc\modules\ravnos\code\ravnos.dm"
+#include "modular_zapoc\modules\talldog\code\talldog.dm"
 #include "modular_zapoc\modules\tiles\code\tiles.dm"
 #include "modular_zapoc\modules\verbs\code\layerchange.dm"
 // END_INCLUDE
