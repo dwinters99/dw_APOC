@@ -3792,7 +3792,6 @@
 #include "modular_zapoc\modules\ncr\code\ncr.dm"
 #include "modular_zapoc\modules\talldog\code\talldog.dm"
 #include "modular_zapoc\modules\ravnos\code\ravnos.dm"
-#include "modular_zapoc\modules\talldog\code\talldog.dm"
 #include "modular_zapoc\modules\tiles\code\tiles.dm"
 #include "modular_zapoc\modules\verbs\code\layerchange.dm"
 // END_INCLUDE
