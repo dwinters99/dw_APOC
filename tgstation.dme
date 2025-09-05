@@ -3799,9 +3799,9 @@
 #include "modular_zapoc\modules\statpanelitems\code\connect_mob_behalf.dm"
 #include "modular_zapoc\modules\statpanelitems\code\stat_panel_tracking.dm"
 #include "modular_zapoc\modules\statpanelitems\code\subsystem_obj_tab_items.dm"
-#include "modular_zapoc\modules\ravnos\code\ravnos.dm"
 #include "modular_zapoc\modules\structures\code\p25_endron.dm"
 #include "modular_zapoc\modules\ncr\code\ncr.dm"
+#include "modular_zapoc\modules\ravnos\code\ravnos.dm"
 #include "modular_zapoc\modules\tiles\code\tiles.dm"
 #include "modular_zapoc\modules\verbs\code\layerchange.dm"
 // END_INCLUDE
