@@ -15,7 +15,6 @@
 	. = ..()
 	if(vest_underlay && !isinhands)
 		vest_underlay.icon = worn_icon
-		vest_underlay.layer = UNDER_SUIT_LAYER
 		. += vest_underlay
 
 
@@ -30,7 +29,7 @@
 		name = "armored [initial(name)]"
 		worn_icon_state = vest_icon
 		desc = "[initial(desc)] Has a durable, lightweight vest. Slay. Alt-click to seperate the vest from [src]."
-		vest_underlay = mutable_appearance(worn_icon, "[initial(icon_state)]", layer = SUIT_LAYER, plane = SUIT_LAYER)
+		vest_underlay = mutable_appearance(worn_icon, "[initial(icon_state)]")
 		is_armored = TRUE
 		if(iscarbon(loc))
 			var/mob/living/carbon/C = loc
