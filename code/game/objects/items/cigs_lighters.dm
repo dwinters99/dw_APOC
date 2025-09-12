@@ -381,7 +381,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 					" thigh, staining [M.p_their()] flesh with the cherry",
 					" leg, leaving a noticeable burn mark",
 					" leg, ash spreads over [M.p_their()] skin"))
-		user.visible_message(span_rose("With a push of [user.p_their()] [name] onto [M], [src] is snuffed using [M.p_their()][bodypart_cigextinguish]. Damn, [user.p_theyre()] a freak."))
+		user.visible_message(span_danger("With a push of [user.p_their()] [name] onto [M] [src] is snuffed using [M.p_their()][bodypart_cigextinguish]. Damn, [user.p_theyre()] a freak."))
 		new type_butt(user.loc)
 		qdel(src)
 	else
