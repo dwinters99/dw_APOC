@@ -247,6 +247,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if(ismob(loc))
 		var/mob/living/M = loc
 		to_chat(M, "<span class='notice'>Your [name] goes out.</span>")
+		playsound(user, 'modular_zapoc/master_files/sound/items/cig_snuff.ogg') // APOC EDIT ADD
 		M.update_inv_wear_mask()
 		M.update_inv_hands()
 
@@ -289,6 +290,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 		new type_butt(location)
 		if(ismob(loc))
 			to_chat(M, "<span class='notice'>Your [name] goes out.</span>")
+			playsound(user, 'modular_zapoc/master_files/sound/items/cig_snuff.ogg') // APOC EDIT ADD
 		qdel(src)
 		return
 	open_flame()
@@ -632,6 +634,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 		if(ismob(loc))
 			var/mob/living/M = loc
 			to_chat(M, "<span class='notice'>Your [name] goes out.</span>")
+			playsound(user, 'modular_zapoc/master_files/sound/items/cig_snuff.ogg') // APOC EDIT ADD
 			lit = FALSE
 			icon_state = icon_off
 			inhand_icon_state = icon_off
