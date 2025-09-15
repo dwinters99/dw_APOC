@@ -18,16 +18,15 @@
 	var/mutable_appearance/overlay_half = mutable_appearance(icon, "[initial(icon_state)]_overlay-half")
 	var/mutable_appearance/overlay_full = mutable_appearance(icon, "[initial(icon_state)]_overlay-full")
 
-	overlay_half.color = "#FFFFFF"
-	overlay_full.color = "#FFFFFF"
+	overlay_half.appearance_flags = RESET_COLOR
+	overlay_full.appearance_flags = RESET_COLOR
 
 	cut_overlay(list(overlay_half, overlay_full))
 
 	if(contents.len >= STR.max_items/2)
-		. += overlay_half
+		add_overlay(overlay_half)
 	else if(contents.len == STR.max_items)
-		. -= overlay_half
-		. += overlay_full
+		add_overlay(overlay_full)
 
 /obj/item/storage/ashtray/Entered()
 	. = ..()
@@ -71,6 +70,6 @@
 			ciggie_butts = 0
 
 		emptyStorage()
-		playsound(user, 'modular_zapoc/master_files/sound/items/cig_snuff.ogg')
+		playsound(user, 'modular_zapoc/master_files/sound/items/cig_snuff.ogg', rand(10,50), TRUE)
 	else
 		to_chat(user, span_warning("You dump [src] out onto the ground. Too bad it has nothing in it."))
