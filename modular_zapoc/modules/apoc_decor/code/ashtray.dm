@@ -3,23 +3,32 @@
 	desc = "A small bowl for holding and disposing of smokestuffs."
 	icon = 'modular_zapoc/modules/apoc_decor/icons/ashtray.dmi'
 	icon_state = "ashtray"
+	base_icon_state = "ashtray"
 	resistance_flags = FIRE_PROOF
 	drop_sound = 'sound/items/handling/drinkglass_drop.ogg'
 	pickup_sound =  'sound/items/handling/drinkglass_pickup.ogg'
-	color = "#303030"
 	grid_width = 1 GRID_BOXES
 	grid_height = 1 GRID_BOXES
 	storage_max_columns = 4
 	storage_max_rows = 4
+	var/recolored = FALSE
+	var/newcolor = "#303030"
+	var/mutable_appearance/base_ashtray
+
+/obj/item/storage/ashtray/Initialize()
+	. = ..()
+	color = null
+
+	base_ashtray = mutable_appearance(icon, "[base_icon_state]")
+	base_ashtray.color = newcolor
+
+	add_overlay(base_ashtray)
 
 /obj/item/storage/ashtray/proc/evaluate_ashtray_contents()
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
 
-	var/mutable_appearance/overlay_half = mutable_appearance(icon, "[initial(icon_state)]_overlay-half")
-	var/mutable_appearance/overlay_full = mutable_appearance(icon, "[initial(icon_state)]_overlay-full")
-
-	overlay_half.appearance_flags = RESET_COLOR
-	overlay_full.appearance_flags = RESET_COLOR
+	var/mutable_appearance/overlay_half = mutable_appearance(icon, "[base_icon_state]_overlay-half")
+	var/mutable_appearance/overlay_full = mutable_appearance(icon, "[base_icon_state]_overlay-full")
 
 	cut_overlay(list(overlay_half, overlay_full))
 
@@ -52,6 +61,40 @@
 /obj/item/storage/ashtray/attack_self(mob/user)
 	. = ..()
 
+	if(!recolored)
+		var/option_select = alert(user, "Choose an option", "[src]", "Dump", "Recolor", "Don't ask again")
+		switch(option_select)
+			if("Recolor")
+
+				var/newercolor = input(user, "Choose a Color.","[src]",color) as color
+
+				var/list/rgb = hex2rgb(newercolor)
+				var/list/hsl = rgb2hsl(rgb[1], rgb[2], rgb[3])
+				var/color_is_dark = hsl[3] < 0.25
+
+				if (color_is_dark)
+					to_chat(user, "<span class='warning'>A color that dark on an object like this? Surely not...</span>")
+					return
+
+				var/color_confirm = alert(user, "Confirm recolor? This can only be done once!", "[src]", "Yes", "No")
+
+				if(color_confirm == "No")
+					return
+
+				newcolor = newercolor
+				cut_overlay(base_ashtray)
+				base_ashtray.color = newcolor
+				add_overlay(base_ashtray)
+				recolored = TRUE
+			if("Don't ask again")
+				recolored = TRUE
+			if("Dump")
+				dump_ashtray(user)
+	else
+		dump_ashtray(user)
+
+
+/obj/item/storage/ashtray/proc/dump_ashtray(mob/user)
 	var/ciggie_butts
 
 	if(contents.len)
