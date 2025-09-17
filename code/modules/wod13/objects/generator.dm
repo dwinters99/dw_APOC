@@ -1,4 +1,4 @@
-/obj/warehouse_generator // APOC EDIT CHANGE
+/obj/generator
 	name = "generator"
 	desc = "Power the controlled area with pure electricity."
 	icon = 'code/modules/wod13/32x48.dmi'
@@ -10,38 +10,10 @@
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
 	var/on = TRUE
 	var/switching_on = FALSE
-	var/time_since_toggle = 0 // APOC EDIT START
 	var/last_sound_played = 0
-//	var/fuel_remain = 1000
+	var/fuel_remain = 1000
 
-/obj/warehouse_generator/proc/start_on(mob/user)
-	switching_on = TRUE
-	to_chat(user, span_notice("You turn [src] back on."))
-	playsound(src.loc, 'sound/items/deconstruct.ogg', 50, TRUE)
-	addtimer(CALLBACK(src, PROC_REF(finalize_on)), 10 SECONDS)
-
-/obj/warehouse_generator/proc/finalize_on()
-	on = TRUE
-	switching_on = FALSE
-	icon_state = "gen"
-	playsound(src.loc, 'sound/effects/supermatter.ogg', 25, TRUE)
-
-/obj/warehouse_generator/attack_hand(mob/user)
-	if(!time_since_toggle+100 <= world.time && !switching_on)
-		to_chat(user, span_warning("[src] needs a moment before you switch it back [on ? "on" : "off"]."))
-		if(on)
-			to_chat(user, span_notice("You turn [src] off."))
-			brek()
-		else if(switching_on)
-			to_chat(user, span_warning("[src] is turning on right now!"))
-		else if(!on)
-			start_on(user)
-
-/obj/warehouse_generator/examine(mob/user)
-	. = ..()
-	. += "[src] is [on ? "on" : "off"]." // APOC EDIT END
-
-/*/obj/generator/examine(mob/user) // APOC EDIT REMOVE START
+/obj/generator/examine(mob/user)
 	. = ..()
 	. += "<b>Fuel</b>: [fuel_remain]/1000"
 
@@ -54,9 +26,9 @@
 			fuel_remain = min(1000, fuel_remain+gas_to_transfer)
 			playsound(loc, 'code/modules/wod13/sounds/gas_fill.ogg', 25, TRUE)
 			to_chat(user, "<span class='notice'>You transfer [gas_to_transfer] fuel to [src].</span>")
-		return*/ // APOC EDIT REMOVE END
+		return
 
-/obj/warehouse_generator/proc/brek() // APOC EDIT CHANGE
+/obj/generator/proc/brek()
 	on = FALSE
 	icon_state = "gen_off"
 	var/area/A = get_area(src)
@@ -71,7 +43,7 @@
 		L.update(FALSE)
 	playsound(loc, 'code/modules/wod13/sounds/explode.ogg', 100, TRUE)
 
-/*/obj/generator/attack_hand(mob/user)
+/obj/generator/attack_hand(mob/user)
 	if(fuel_remain == 0)
 		to_chat(user, "<span class='warning'>There is no fuel in [src].</span>")
 		return
@@ -89,22 +61,19 @@
 			switching_on = FALSE
 			to_chat(user, "<span class='notice'>You switch [src] on.</span>")
 		else
-			switching_on = FALSE*/
+			switching_on = FALSE
 
-/obj/warehouse_generator/Initialize()
+/obj/generator/Initialize()
 	. = ..()
 	GLOB.generators += src
 	START_PROCESSING(SSobj, src)
 
-/obj/warehouse_generator/Destroy()
+/obj/generator/Destroy()
 	. = ..()
 	GLOB.generators -= src
 	STOP_PROCESSING(SSobj, src)
 
-/obj/warehouse_generator/process(delta_time) // APOC EDIT START
-	if(time_since_toggle+100 <= world.time)
-		time_since_toggle = world.time // APOC EDIT END
-
+/obj/generator/process(delta_time)
 	if(on)
 		if(last_sound_played+40 <= world.time)
 			last_sound_played = world.time
