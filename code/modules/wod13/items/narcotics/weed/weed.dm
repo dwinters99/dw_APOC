@@ -180,7 +180,7 @@
 		qdel(src)
 
 		user.put_in_hands(doctor_bluntenstein)
-		to_chat(user, span_notice("You remove the [pot_name] from the package and quickly roll it up."))
+		to_chat(user, span_notice("You remove the [pot_name] from the package and quickly roll it up. You discard the baggie."))
 		return TRUE
 	return FALSE // APOC EDIT END
 
