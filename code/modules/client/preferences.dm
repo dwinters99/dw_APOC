@@ -517,6 +517,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 			dat += "<br><b>Phone Number Autopublish Name:</b> <a href='byond://?_src_=prefs;preference=phone_autopublish_name;task=input'>[phone_autopublish_name]</a>"
 
+			if(slotlocked)
+				dat += "<br><a href='byond://?_src_=prefs;preference=change_appearance;task=input'>Unlock Sheet</a>"
+			else
+				dat += "<br><a href='byond://?_src_=prefs;preference=lock_sheet;task=input'>Lock Sheet</a>"
+
 			dat += "</tr></table>"
 
 			dat += "<h2>[make_font_cool("BODY")]</h2>"
@@ -851,8 +856,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				if (possible_new_disciplines.len && (player_experience >= 10))
 					dat += "<a href='byond://?_src_=prefs;preference=newchidiscipline;task=input'>Learn a new Discipline (10)</a><BR>"
 
-			if(slotlocked)
-				dat += "<a href='byond://?_src_=prefs;preference=change_appearance;task=input'>Change Appearance (Free)</a><BR>"
 			if(generation_bonus)
 				dat += "<a href='byond://?_src_=prefs;preference=reset_with_bonus;task=input'>Create new character with generation bonus ([generation]-[generation_bonus])</a><BR>"
 			// TFN EDIT ADDITION START: headshots, flavortext, morality system, and most other TFN specific prefs
@@ -2981,6 +2984,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						return
 
 					slotlocked = FALSE
+
+				if("lock_sheet") // APOC EDIT START
+					if(slotlocked)
+						return
+
+					slotlocked = TRUE // APOC EDIT END
 
 				if("reset_with_bonus")
 					if((clan?.name == CLAN_NONE) || !generation_bonus)
