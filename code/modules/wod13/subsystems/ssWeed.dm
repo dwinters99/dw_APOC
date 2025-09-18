@@ -1,16 +1,15 @@
 SUBSYSTEM_DEF(weed)
 	name = "Weed Growth"
 	init_order = INIT_ORDER_DEFAULT
-	wait = 1800
+	wait = 50
 	priority = FIRE_PRIORITY_VERYLOW
 
 /datum/controller/subsystem/weed/fire()
 	for(var/obj/structure/weedshit/W in GLOB.weed_list) // APOC EDIT START
 		if(W.growth_stage == 0)
 			W.wet = FALSE
-			return
 
-		if(!W.wet && prob(50)) // Unwatered weed takes roughly twice as long to grow
+		if(W.growth_stage && (!W.wet && prob(50))) // Unwatered weed takes roughly twice as long to grow
 			W.growth_stage = max(1, W.growth_stage-1) // Cancelled out by next if()
 
 		if(W.growth_stage && W.growth_stage < 4) // If plant exists and not fully grown

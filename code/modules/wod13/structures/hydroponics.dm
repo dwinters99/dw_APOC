@@ -21,7 +21,7 @@
 	if(!wet)
 		. += "<span class='warning'>[src] is dry!</span>"
 	if(growth_stage > 0) // APOC EDIT START
-		. += span_notice("[strain] is growing in [src]") // APOCE DIT END
+		. += span_notice("[strain] is growing in [src]") // APOC EDIT END
 	if(growth_stage == 5)
 		. += "<span class='warning'>The crop is dead!</span>"
 	else
