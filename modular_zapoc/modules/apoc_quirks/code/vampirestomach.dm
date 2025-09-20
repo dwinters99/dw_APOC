@@ -21,7 +21,7 @@
 /atom/movable/screen/alert/vampire_stomach
 	name = "Full Stomach"
 	desc = "Your vampiric stomach is more than half full. Alt-click the alert to purge it's contents. Stand next to a toilet, sink, or trashcan if you don't want to make a mess!"
-	icon = 'modular_apoc/master_files/icons/hud/screen_alert.dmi'
+	icon = 'modular_zapoc/master_files/icons/hud/screen_alert.dmi'
 	icon_state = "stomach"	// Sprite by Major00 (Paynt)
 
 
