@@ -4,7 +4,7 @@
 SUBSYSTEM_DEF(treasure)
 	name = "Pirate's Booty"
 	init_order = INIT_ORDER_DEFAULT
-	wait = 1 MINUTE
+	wait = 1 MINUTES
 	priority = FIRE_PRIORITY_VERYLOW
 
 	var/list/treasure_turfs = list() // All turfs that are elligible to spawn treasure
@@ -12,30 +12,30 @@ SUBSYSTEM_DEF(treasure)
 
 /datum/controller/subsystem/treasure/Initialize()
 	for(var/turf/T in world) // ALL TURFS. BURN IT ALL DOWN!!!
-		if(can_spawn_treasure) //
+		if(T.can_spawn_treasure)
 			treasure_turfs += T
 
 	for(var/turf/TT in shuffle(treasure_turfs))
-		if(treasure_turfs_spawned <= treasure_turfs*TREASURE_BASE_PERCENT)
-			if(spawn_treasure(TT))
-			has_loot = TRUE
+		if(treasure_turfs_spawned.len <= treasure_turfs.len*TREASURE_BASE_PERCENT)
+			if(TT.spawn_treasure())
+				TT.has_loot = TRUE
 		else
 			break
 
 /datum/controller/subsystem/treasure/fire()
-	if(treasure_turfs_spawned <= treasure_turfs*TREASURE_BASE_PERCENT)
+	if(treasure_turfs_spawned.len <= treasure_turfs.len*TREASURE_BASE_PERCENT)
 		var/iterations
 		for(var/turf/T in shuffle(treasure_turfs))
 			iterations++
-			if(spawn_treasure(T) || iterations > 100)
+			if(T.spawn_treasure() || iterations > 100)
 				T.has_loot = TRUE
 				iterations = 0
 				break
 
-/turf/proc/spawn_treasure(turf/T)
-	if(T.has_loot)
+/turf/proc/spawn_treasure()
+	if(!has_loot)
 		return FALSE
 	else
-		var/obj/item/treasure/phat_loot = new /obj/item/treasure(T.loot)
-		phat_loot.loot_type = T.loot_type
-		return TRUE
+		var/obj/item/treasure/phat_loot = new /obj/item/treasure(loot)
+		phat_loot.loot_type = loot_type
+		return FALSE
