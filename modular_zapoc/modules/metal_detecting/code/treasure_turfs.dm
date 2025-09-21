@@ -1,4 +1,4 @@
-/turf/open/floor/plating/vampgrass/treasure //
+/turf/open/floor/plating/vampgrass/treasure
 	can_spawn_treasure = TRUE
 
 
