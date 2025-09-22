@@ -1,7 +1,7 @@
 SUBSYSTEM_DEF(weed)
 	name = "Weed Growth"
 	init_order = INIT_ORDER_DEFAULT
-	wait = 50
+	wait = 1800
 	priority = FIRE_PRIORITY_VERYLOW
 
 /datum/controller/subsystem/weed/fire()
