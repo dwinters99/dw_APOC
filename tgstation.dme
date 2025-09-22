@@ -3787,6 +3787,7 @@
 #include "modular_zapoc\modules\carpets\code\carpets.dm"
 #include "modular_zapoc\modules\clothing\code\eyepatches.dm"
 #include "modular_zapoc\modules\clothing\code\sancho.dm"
+#include "modular_zapoc\modules\clothing\code\tracksuit.dm"
 #include "modular_zapoc\modules\clothing\code\turtleskirt.dm"
 #include "modular_zapoc\modules\clothing\code\turtleskirt_loadout.dm"
 #include "modular_zapoc\modules\eat_food\code\quirks_zapoc.dm"
