@@ -5,7 +5,7 @@
 	worn_icon = 'modular_zapoc/modules/clothing/icons/trackpants_worn.dmi'
 	icon_state = "trackpants"
 	can_adjust = FALSE
-	var/spawn_with_jacket = FALSE
+	var/spawn_with_jacket = TRUE
 	var/spawn_jacket = /obj/item/clothing/suit/trackjacket
 	var/attached_jacket
 	var/attached_jacket_open = FALSE
@@ -17,6 +17,7 @@
 	if(spawn_with_jacket)
 		var/obj/item/clothing/suit/trackjacket/TJ = new spawn_jacket
 		attach_trackjacket(TJ)
+
 
 /obj/item/clothing/under/trackpants/attackby(obj/item/I, mob/user)
 	. = ..()
