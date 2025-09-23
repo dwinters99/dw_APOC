@@ -139,6 +139,11 @@
 
 	user.regenerate_icons()
 
+
+/obj/item/clothing/suit/trackjacket/examine(mob/user)
+	. = ..()
+	. += span_notice("Alt-click to adjust [src].")
+
 /obj/item/clothing/suit/trackjacket/blue
 	name = "blue track jacket"
 	icon_state = "trackjacketblue"
@@ -161,3 +166,4 @@
 	name = "white track jacket"
 	icon_state = "trackjacketwhite"
 	base_icon_state = "trackjacketwhite"
+
