@@ -80,6 +80,14 @@
 		C.regenerate_icons()
 
 
+/obj/item/clothing/under/trackpants/examine(mob/user)
+	. = ..()
+	if(attached_jacket)
+		. += span_notice("Alt-click to remove attached jacket.")
+	else
+		. += span_notice("A trackjacket can be attached to this uniform.")
+
+
 /obj/item/clothing/under/trackpants/blue
 	name = "blue track pants"
 	icon_state = "trackpantsblue"
