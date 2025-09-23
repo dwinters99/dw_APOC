@@ -1,7 +1,7 @@
 /*
 Experienced Driver
 Bone Key
-Anonymous
+Anonymous // APOC EDIT REMOVE
 Bloody Lover
 Tough Flesh
 Slowpoke
@@ -45,12 +45,12 @@ Dancer
 	gain_text = "<span class='notice'>You feel more experienced about cars.</span>"
 	lose_text = "<span class='warning'>You feel more clueless about cars.</span>"
 
-/datum/quirk/annonymus
+/*/datum/quirk/annonymus // APOC EDIT REMOVE START
 	name = "Anonymous"
 	desc = "You always bring a mask."
 	value = 1
 	gain_text = "<span class='notice'>You feel more anonymus.</span>"
-	lose_text = "<span class='warning'>You don't feel anonymous anymore.</span>"
+	lose_text = "<span class='warning'>You don't feel anonymous anymore.</span>"*/ // APOC EDIT END
 
 /datum/quirk/annonymus/on_spawn()
 	if(!iswerewolf(quirk_holder))

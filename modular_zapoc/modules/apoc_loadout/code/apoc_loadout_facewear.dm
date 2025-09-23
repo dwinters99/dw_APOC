@@ -9,7 +9,7 @@
 	path = /obj/item/clothing/mask/vampire/balaclava
 
 /datum/gear/facewear/bear
-	display_name = "bear mask"
+	display_name = "costume mask, bear"
 	path = /obj/item/clothing/mask/animal/rat/bear
 
 /datum/gear/facewear/rat
@@ -17,7 +17,7 @@
 	path = /obj/item/clothing/mask/animal/rat
 
 /datum/gear/facewear/bee
-	display_name = "bee mask"
+	display_name = "costume mask, bee"
 	path = /obj/item/clothing/mask/animal/rat/bee
 
 /datum/gear/facewear/fox
@@ -41,16 +41,17 @@
 	path = /obj/item/clothing/mask/surgical
 
 /datum/gear/facewear/mummy
-	display_name = "costume mask, mummy"
+	display_name = "mummy wrap"
 	path = /obj/item/clothing/mask/mummy
 
 /datum/gear/facewear/scarecrow
-	display_name = "costume mask, scarecrow"
+	display_name = "scarecrow sack"
 	path = /obj/item/clothing/mask/scarecrow
 
 /datum/gear/facewear/respirator
 	display_name = "respirator"
-	path = /obj/item/clothing/mask/vampire
+	description = "A rebreather for blocking fumes and unwanted stares."
+	path = /obj/item/clothing/mask/vampire.
 
 /datum/gear/facewear/lucha
 	display_name = "máscara, green"
