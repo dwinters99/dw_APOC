@@ -3775,7 +3775,6 @@
 #include "modular_zapoc\master_files\code\modules\wod13\wallcode.dm"
 #include "modular_zapoc\modules\apoc_jobs\voidodate_citizen.dm"
 #include "modular_zapoc\modules\apoc_jobs\job_types\_job.dm"
-#include "modular_zapoc\modules\apoc_quirks\code\beast_form_quirk.dm"
 #include "modular_zapoc\modules\apoc_quirks\code\blind_quirk.dm"
 #include "modular_zapoc\modules\apoc_quirks\code\bright_eyes.dm"
 #include "modular_zapoc\modules\apoc_quirks\code\colorblind_quirk.dm"
