@@ -1,6 +1,6 @@
 /datum/quirk/kinfolk
-	name = "Kinfolk"
-	desc = "You are kinfolk. Garou and others who can smell your nature will know this."
+	name = "Beast Form"
+	desc = "Your Hispo form is especially bestial. Hispo causes delirium."
 	value = 2
 	mob_trait = TRAIT_KINFOLK
 	gain_text = "<span class='notice'>You smell like wet dog.</span>"
