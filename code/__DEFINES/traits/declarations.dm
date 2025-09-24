@@ -165,6 +165,7 @@
 
 #define TRAIT_DANCER			"dancer"
 #define TRAIT_EXP_DRIVER		"experienced_driver"
+#define TRAIT_BAD_DRIVER "bad_driver"
 #define TRAIT_BONE_KEY			"bone_key"
 #define TRAIT_BLOODY_LOVER		"bloody_lover"
 #define TRAIT_TOUGH_FLESH		"tough_flesh"
