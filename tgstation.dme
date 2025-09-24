@@ -3781,6 +3781,7 @@
 #include "modular_zapoc\modules\apoc_quirks\code\deaf_quirk.dm"
 #include "modular_zapoc\modules\apoc_quirks\code\eat_food_quirk.dm"
 #include "modular_zapoc\modules\apoc_quirks\code\fair_glabro_quirk.dm"
+#include "modular_zapoc\modules\apoc_quirks\code\kinfolk_quirk.dm"
 #include "modular_zapoc\modules\apoc_quirks\code\money_quirks.dm"
 #include "modular_zapoc\modules\apoc_quirks\code\mute_quirk.dm"
 #include "modular_zapoc\modules\apoc_quirks\code\nonswimmer_quirk.dm"
