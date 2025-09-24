@@ -483,6 +483,9 @@
 			if(HAS_TRAIT(src, TRAIT_BRIGHTEYES) && !(check_obscured_slots() & ITEM_SLOT_EYES))
 				msg += span_warning("There's something about [p_their()] eyes...<br>") // APOC EDIT END
 
+			if(HAS_TRAIT(src, TRAIT_ANIMAL_MUSK))
+				msg += span_warning("[p_they(TRUE)] smell awful...<br>") // APOC EDIT END
+
 		if(getorgan(/obj/item/organ/brain))
 			if(ai_controller?.ai_status == AI_STATUS_ON)
 				msg += span_deadsay("[t_He] do[t_es]n't appear to be [t_him]self.<br>")
